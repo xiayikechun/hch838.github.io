@@ -40,10 +40,10 @@
             if(xhr.readyState === 4 && xhr.status === 200) {
                 let gps = JSON.parse(xhr.responseText).data.tracks[0].points;
                 time = new Date(gps[gps.length-1].locatetime).toLocaleString();
-                console.log(time);
+                // console.log(time);
                 shijian.value = '最后更新时间'+time;
-                console.log("gps原始坐标");
-                console.log(gps);
+                // console.log("gps原始坐标");
+                // console.log(gps);
                 let gpsqq='';
                 for(let i=0;i<gps.length;i++){
                     gpsqq += gps[i].location.split(',').reverse().toString()+';'
@@ -61,8 +61,8 @@
             for(let i = 0; i < qq.length; i++) {
                 gaode.push([qq[i].lng,qq[i].lat]);
             }
-            console.log("高德坐标gaode");
-            console.log(gaode);
+            // console.log("高德坐标gaode");
+            // console.log(gaode);
             //纠偏数组转对象
             let gaode2 = []; //纠偏前高德对象
             let gaode3 = []; //纠偏后高德数组
@@ -75,24 +75,24 @@
                     tm: i
                 });
             }
-            console.log("高德对象，等待纠偏gaode2");
-            console.log(gaode2);
+            // console.log("高德对象，等待纠偏gaode2");
+            // console.log(gaode2);
             //轨迹纠偏
             AMap.plugin("AMap.GraspRoad", function() {
                 let grasp = new AMap.GraspRoad();
                 grasp.driving(gaode2, function(error, result) {
                     if (!error) {
                         let newPath = result.data.points; //纠偏后的轨迹
-                        console.log("纠偏后的对象newPath");
-                        console.log(newPath);
+                        // console.log("纠偏后的对象newPath");
+                        // console.log(newPath);
                         let li = result.data.distance; //里程
                         for (let i = 0; i < newPath.length; i++) {//对象转数组
                             gaode3.push([newPath[i].x, newPath[i].y]);
                         }
                         gaode3.unshift(gaode[0]);//添加原始起点
                         gaode3.push(gaode[gaode.length-1]);//添加原始终点
-                        console.log("纠偏后数组gaode3");
-                        console.log(gaode3);
+                        // console.log("纠偏后数组gaode3");
+                        // console.log(gaode3);
                         map.add(
                             new AMap.Polyline({
                                 path: gaode,
