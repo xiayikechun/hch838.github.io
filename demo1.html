@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>轨迹</title>
+    <script src="http://webapi.amap.com/maps?v=1.4.14&key=47d57deacf67daf4fe68b31c3dcdc253"></script>
+    <style>
+      html,
+      body,
+      #container {
+        margin: 0;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      let map = new AMap.Map("container");
+      let gps = [
+        //GPS原始坐标
+        [114.019359, 22.656069],
+        [114.018783, 22.655804],
+        [114.018373, 22.655972],
+        [114.017745, 22.656282],
+        [114.017458, 22.656896],
+        [114.016989, 22.657463],
+        [114.016453, 22.657841],
+        [114.016858, 22.658177],
+        [114.017236, 22.658462],
+        [114.017566, 22.65858],
+        [114.018183, 22.658556],
+        [114.019229, 22.658251],
+        [114.020271, 22.65829],
+        [114.021025, 22.657963],
+        [114.021325, 22.657628],
+        [114.021011, 22.657185],
+        [114.020201, 22.656703],
+        [114.019507, 22.65607],
+        [114.019223, 22.656176],
+        [114.018898, 22.65651],
+        [114.019062, 22.656834],
+        [114.01944, 22.656978],
+        [114.019808, 22.657337]
+      ];
+                map.add(
+                  new AMap.Polyline({
+                    path: gps,
+                    strokeWeight: 8,
+                    strokeOpacity: 0.8,
+                    strokeColor: "purple",
+                    showDir: true
+                  })
+                ); //显示纠偏轨迹
+                map.setFitView(); //保证所有覆盖物都在视野范围内
+                let che = new AMap.Marker({
+                  map: map,
+                  position: gps[0],
+                  icon: "https://hch838.github.io/car/car1.png",
+                  offset: new AMap.Pixel(-24, -12),//偏移
+                  autoRotation: true,//移动时自动旋转
+                });
+                function cherun(){
+                  che.moveTo(gps, 1000);
+                }
+                cherun()
+                che.on('moveend',()=>cherun());
+         
+   
+
+
+
+      //回放
+    </script>
+  </body>
+</html>
