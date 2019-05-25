@@ -50,10 +50,11 @@
     <script>
         let map = new AMap.Map("container");
         let xhr = new XMLHttpRequest();
+        let gps ={};
         xhr.open('GET','https://tsapi.amap.com/v1/track/terminal/trsearch'+ location.search +'&key=8aeec61b8d5e8a187ef462f912760781&sid=39156&pagesize=999', true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4 && xhr.status === 200) {
-                let gps = JSON.parse(xhr.responseText).data.tracks[0].points;
+                gps = JSON.parse(xhr.responseText).data.tracks[0].points;
                 let chufatime =gps[0].locatetime;
                 let zuihoutime =gps[gps.length-1].locatetime;
                 let xingshitime = parseInt((zuihoutime-chufatime)/60000);
@@ -88,13 +89,16 @@
             //纠偏数组转对象
             let gaode2 = []; //纠偏前高德对象
             let gaode3 = []; //纠偏后高德数组
+            let tm0 = parseInt(gps[0].locatetime/1000);
             for (let i = 0; i < gaode.length; i++) {
+                let tm = i===0? tm0 : parseInt(gps[i].locatetime/1000)-tm0;
+                // console.log(tm);
                 gaode2.push({
                     x: gaode[i][0],
                     y: gaode[i][1],
                     sp: 50,
                     ag: 0,
-                    tm: i+20
+                    tm: tm
                 });
             }
             // console.log("高德对象，等待纠偏gaode2");
