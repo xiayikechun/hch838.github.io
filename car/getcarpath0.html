@@ -51,7 +51,7 @@
         let map = new AMap.Map("container");
         let xhr = new XMLHttpRequest();
         let gps = {};
-        xhr.open('GET','https://tsapi.amap.com/v1/track/terminal/trsearch'+ location.search +'&key=8aeec61b8d5e8a187ef462f912760781&sid=39156&pagesize=999', true);
+        xhr.open('GET','https://tsapi.amap.com/v1/track/terminal/trsearch'+ location.search +'&key=8aeec61b8d5e8a187ef462f912760781&sid=8110&pagesize=999', true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4 && xhr.status === 200) {
                 // console.log('原始数据');
@@ -94,15 +94,15 @@
                     map.add(
                         new AMap.Polyline({
                             path: gaode,
-                            strokeWeight: 5,
-                            strokeOpacity: 0.5,
-                            strokeColor: "red",
+                            strokeWeight: 8,
+                            strokeOpacity: 0.8,
+                            strokeColor: "purple",
                             showDir: true
                         })
                     ); //显示原始轨迹
                     map.setFitView(); //保证所有覆盖物都在视野范围内
                     jiupian(gaode);
-                    // donghua(gaode);
+                    donghua(gaode);
                 }
             });
         }
@@ -141,17 +141,17 @@
                         gaode3.push(dian1);//添加原始终点
                         // console.log("纠偏后数组gaode3");
                         // console.log(gaode3);
-                        map.add(
-                            new AMap.Polyline({
-                                path: gaode3,
-                                strokeWeight: 8,
-                                strokeOpacity: 0.8,
-                                strokeColor: "purple",
-                                showDir: true
-                            })
-                        ); //显示纠偏轨迹
-                        map.setFitView(); //保证所有覆盖物都在视野范围内
-                        donghua(gaode3);
+                        // map.add(
+                        //     new AMap.Polyline({
+                        //         path: gaode3,
+                        //         strokeWeight: 8,
+                        //         strokeOpacity: 0.8,
+                        //         strokeColor: "purple",
+                        //         showDir: true
+                        //     })
+                        // ); //显示纠偏轨迹
+                        // map.setFitView(); //保证所有覆盖物都在视野范围内
+                        // donghua(gaode3);
                     }
                 });
             });
@@ -160,10 +160,10 @@
             let che = new AMap.Marker({
                 map: map,
                 position: guiji[0],
-                icon: "1.png",
-                offset: new AMap.Pixel(-24, -12),//车偏移
-                // offset: new AMap.Pixel(-22, -50),//人偏移
-                autoRotation: true,//移动时自动旋转
+                icon: "2.png",
+                // offset: new AMap.Pixel(-24, -12),//车偏移
+                offset: new AMap.Pixel(-22, -50),//人偏移
+                // autoRotation: true,//移动时自动旋转
             });
             function cherun(){
                 setTimeout(function(){
