@@ -23,25 +23,44 @@
         top: 0;
         right: 0;
         z-index: 200;
+        text-align: right;
+        }
+        .inleft{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 200;
         }
     </style>      
     </head>
 <body>
     <div id="container"></div>
+    <div class="inleft">
+        <input type="button" value="" id="chufashijian"><br>
+        <input type="button" value="" id="zuihoushijian">
+    </div>
     <div class="in">
-            <input type="button" value="" id="shijian"><br><br>
+        <input type="button" value="@到达我这里要多久？" id="shijian"><br>
+        <input type="button" value="" id="xingshishijian"><br>
+        <input type="button" value="" id="gongli">
     </div>      
     <script>
         let map = new AMap.Map("container");
         let xhr = new XMLHttpRequest();
-        let time ='';
         xhr.open('GET','https://tsapi.amap.com/v1/track/terminal/trsearch'+ location.search +'&key=8aeec61b8d5e8a187ef462f912760781&sid=8110&pagesize=999', true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4 && xhr.status === 200) {
                 let gps = JSON.parse(xhr.responseText).data.tracks[0].points;
-                time = new Date(gps[gps.length-1].locatetime).toLocaleString();
-                // console.log(time);
-                shijian.value = '最后更新时间'+time;
+                let chufatime =gps[0].locatetime;
+                let zuihoutime =gps[gps.length-1].locatetime;
+                let xingshitime = parseInt((zuihoutime-chufatime)/60000);
+                // console.log(xingshitime);
+                xingshitime = xingshitime/60>=1?parseInt(xingshitime/60)+'小时'+xingshitime%60+'分钟':fen+'分钟';
+                xingshishijian.value = '已行驶'+ xingshitime;
+                chufatime = new Date(chufatime).toLocaleString('chinese',{hour12:false});
+                zuihoutime = new Date(zuihoutime).toLocaleString('chinese',{hour12:false});
+                chufashijian.value = '出发时间'+ chufatime;
+                zuihoushijian.value = '位置最后更新时间'+ zuihoutime;
                 // console.log("gps原始坐标");
                 // console.log(gps);
                 let gpsqq='';
@@ -86,6 +105,7 @@
                         // console.log("纠偏后的对象newPath");
                         // console.log(newPath);
                         let li = result.data.distance; //里程
+                        gongli.value='已行驶'+ parseInt(li/1000) +'公里';
                         for (let i = 0; i < newPath.length; i++) {//对象转数组
                             gaode3.push([newPath[i].x, newPath[i].y]);
                         }
@@ -157,9 +177,9 @@
                                 })
                                 driving.search(gaode[gaode.length-1], my, function (status, result) {
                                     let fen = parseInt(result.routes[0].time/60)
-                                    fen = fen/60>=1?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟'
-                                    shijian.value='最后更新时间'+time;
-                                    alert('您的地址大概是：\n'+address +'\n\n到达您这里大概需要时间：\n' + fen)
+                                    fen = fen/60>=1?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟';
+                                    shijian.value='@到达我这里要多久？';
+                                    alert('您的位置大概是：\n'+address +'\n\n到达您这里大概需要时间：\n' + fen)
                                 })
                             })
                             // 以上路线规划
