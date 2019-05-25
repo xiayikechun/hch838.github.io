@@ -58,7 +58,7 @@
                 let zuihoutime =gps[gps.length-1].locatetime;
                 let xingshitime = parseInt((zuihoutime-chufatime)/60000);
                 // console.log(xingshitime);
-                xingshitime = xingshitime/60>=1?parseInt(xingshitime/60)+'小时'+xingshitime%60+'分钟':fen+'分钟';
+                xingshitime = xingshitime/60>=1?parseInt(xingshitime/60)+'小时'+xingshitime%60+'分钟':xingshitime+'分钟';
                 xingshishijian.value = '已行驶'+ xingshitime;
                 chufatime = new Date(chufatime).toLocaleString('chinese',{hour12:false});
                 zuihoutime = new Date(zuihoutime).toLocaleString('chinese',{hour12:false});
