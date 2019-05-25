@@ -33,7 +33,7 @@
 <body>
     <div id="container"></div>
     <div class="in">
-            <input type="button" value="到达我这里要多久？" id="shijian"><br><br>
+            <input type="button" value="@到达我这里要多久？" id="shijian"><br><br>
     </div>      
     <script>
         let map = new AMap.Map("container");
@@ -99,7 +99,7 @@
                                 driving.search(gps, my, function (status, result) {
                                     let fen = parseInt(result.routes[0].time/60)
                                     fen = fen/60>=1?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟'
-                                    shijian.value='到达我这里要多久？';
+                                    shijian.value='@到达我这里要多久？';
                                     alert('您的位置大概是：\n'+address +'\n\n到达您这里大概需要时间：\n' + fen)
                                 })
                             })
