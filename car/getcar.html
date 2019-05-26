@@ -33,7 +33,7 @@
 <body>
     <div id="container"></div>
     <div class="in">
-            <input type="button" value="@到达我这里要多久？" id="shijian"><br><br>
+        <input type="button" value="该设备暂未上传位置" id="shijian"><br><br>
     </div>      
     <script>
         let map = new AMap.Map("container");
@@ -42,40 +42,45 @@
         xhr.open('GET','https://tsapi.amap.com/v1/track/terminal/lastpoint' + location.search + '&key=8aeec61b8d5e8a187ef462f912760781&sid=8110&correction=n', true);
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4 && xhr.status === 200) {
-                let data = JSON.parse(xhr.responseText).data;
-                gps = data.location.split(',');
-                let gps2 =[gps];
-                let timems = data.locatetime;
-                let nowtimems = new Date().getTime();
-                timems = parseInt((nowtimems-timems)/1000);
-                AMap.convertFrom(gps2, "gps", function(status, result) {
-                    if (result.info === "ok") {
-                        gps2 = result.locations;//gps转高德坐标
-                        let marker = new AMap.Marker({
-                            map: map,
-                            position: gps2[0]//添加点
-                            });
-                        map.setFitView();//聚焦
-                        function text(){//添加文字
-                            marker.setLabel({
-                            offset: new AMap.Pixel(0,-25),
-                            content: timems/60>=1 ? parseInt(timems/60)+'分钟前位置' : timems +'秒前位置',
-                            direction: 'right'
-                            });
-                            timems++;
+                if(xhr.responseText.indexOf('data":null')>0){
+                    alert('暂无数据');
+                }else{
+                    shijian.value='@到达我这里要多久？';
+                    let data = JSON.parse(xhr.responseText).data;
+                    gps = data.location.split(',');
+                    let gps2 =[gps];
+                    let timems = data.locatetime;
+                    let nowtimems = new Date().getTime();
+                    timems = parseInt((nowtimems-timems)/1000);
+                    AMap.convertFrom(gps2, "gps", function(status, result) {
+                        if (result.info === "ok") {
+                            gps2 = result.locations;//gps转高德坐标
+                            let marker = new AMap.Marker({
+                                map: map,
+                                position: gps2[0]//添加点
+                                });
+                            map.setFitView();//聚焦
+                            function text(){//添加文字
+                                marker.setLabel({
+                                offset: new AMap.Pixel(0,-25),
+                                content: timems/60>=1 ? parseInt(timems/60)+'分钟前位置' : timems +'秒前位置',
+                                direction: 'right'
+                                });
+                                timems++;
+                            }
+                            text();
+                            if(timems<60){
+                                let runid = setInterval(function(){
+                                    text();
+                                    if(timems>60){
+                                        clearInterval(runid)
+                                        };
+                                    },1000
+                                )
+                            }
                         }
-                        text();
-                        if(timems<60){
-                            let runid = setInterval(function(){
-                                text();
-                                if(timems>60){
-                                    clearInterval(runid)
-                                    };
-                                },1000
-                            )
-                        }
-                    }
-                });
+                    });
+                }
             }
         }
         xhr.send(null);
@@ -87,26 +92,26 @@
                     enableHighAccuracy: true,//是否使用高精度定位，默认:true
                     timeout: 15000,          //超时
                 });
-                    geolocation.getCurrentPosition(function(status,result){
-                        if(status=='complete'){
-                            let my = [result.position.lng,result.position.lat];
-                            let address = result.formattedAddress.replace('市','市\n');
-                            // 以下路线规划
-                            AMap.plugin('AMap.Driving', function() {
-                                let driving = new AMap.Driving({
-                                    policy: AMap.DrivingPolicy.LEAST_TIME//最快方式
-                                })
-                                driving.search(gps, my, function (status, result) {
-                                    let fen = parseInt(result.routes[0].time/60)
-                                    fen = fen/60>=1?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟'
-                                    shijian.value='@到达我这里要多久？';
-                                    alert('您的位置大概是：\n'+address +'\n\n到达您这里大概需要时间：\n' + fen)
-                                })
+                geolocation.getCurrentPosition(function(status,result){
+                    if(status=='complete'){
+                        let my = [result.position.lng,result.position.lat];
+                        let address = result.formattedAddress.replace('市','市\n');
+                        // 以下路线规划
+                        AMap.plugin('AMap.Driving', function() {
+                            let driving = new AMap.Driving({
+                                policy: AMap.DrivingPolicy.LEAST_TIME//最快方式
                             })
-                            // 以上路线规划
-                        }
-                    });
+                            driving.search(gps, my, function (status, result) {
+                                let fen = parseInt(result.routes[0].time/60)
+                                fen = fen/60>=1?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟'
+                                shijian.value='@到达我这里要多久？';
+                                alert('您的位置大概是：\n'+address +'\n\n到达您这里大概需要时间：\n' + fen)
+                            })
+                        })
+                        // 以上路线规划
+                    }
                 });
+            });
             // 以上定位模块
         }
     </script>

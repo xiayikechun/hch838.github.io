@@ -43,7 +43,7 @@
         <input type="button" value="" id="zuihoushijian">
     </div>
     <div class="in">
-        <input type="button" value="该条轨迹暂未上传位置" id="shijian"><br>
+        <input type="button" value="暂无数据" id="shijian"><br>
         <input type="button" value="" id="xingshishijian"><br>
         <input type="button" value="" id="gongli">
     </div>      
@@ -57,7 +57,7 @@
                 // console.log('原始数据');
                 // console.log(xhr.responseText);
                 if(xhr.responseText.indexOf('counts":0')>0){
-                    alert('该条轨迹暂未上传位置');
+                    alert('暂无数据');
                 }else{
                     shijian.value='@到达我这里要多久？';
                     shijian.onclick =()=>dingwei();
