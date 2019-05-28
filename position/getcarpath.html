@@ -171,11 +171,6 @@
                 // offset: new AMap.Pixel(-22, -50),//人偏移
                 autoRotation: true,//移动时自动旋转
             });
-            function cherun(){
-                setTimeout(function(){
-                    che.moveTo(guiji, li*0.36)//按照纠偏后的轨迹10秒走完
-                },1000)
-            }
             let passedPolyline = new AMap.Polyline({//走过的线条
                 map: map,
                 strokeColor: "#ff0",
@@ -184,9 +179,9 @@
             che.on('moving', function (e) {//绘制走过的线条
                 passedPolyline.setPath(e.passedPath);
             });
-            cherun();
-            xingshishijian.onclick=()=>cherun();
-            gongli.onclick=()=>cherun();
+            setTimeout(function(){
+                che.moveAlong(guiji,li*0.36,'',true)//按照纠偏后的轨迹10秒走完
+            },1000)
         }
         function dingwei(){
             shijian.value='请稍等...';
