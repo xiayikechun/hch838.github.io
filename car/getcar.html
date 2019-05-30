@@ -57,12 +57,13 @@
                             gps2 = result.locations;//gps转高德坐标
                             let marker = new AMap.Marker({
                                 map: map,
+                                icon: "car.png",
                                 position: gps2[0]//添加点
                                 });
                             map.setFitView();//聚焦
                             function text(){//添加文字
                                 marker.setLabel({
-                                offset: new AMap.Pixel(0,-25),
+                                offset: new AMap.Pixel(0,-35),
                                 content: timems/60>=1 ? parseInt(timems/60)+'分钟前位置' : timems +'秒前位置',
                                 direction: 'right'
                                 });
