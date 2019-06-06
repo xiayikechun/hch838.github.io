@@ -74,8 +74,7 @@
                     let Text = new AMap.Text({
                         map: map,
                         position: gaode[gaode.length - 1],//添加点
-                        anchor:'bottom-left',
-                        offset: new AMap.Pixel(20, -20)//偏移
+                        offset: new AMap.Pixel(0, -50)//偏移
                     });
                     let timems = new Date().getTime();//现在时间
                     timems = parseInt((timems - data.locatetime) / 1000);//现在时间减最后上传时间
