@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="refresh" content="120">
+    <meta http-equiv="refresh" content="60">
     <title>我在这儿</title>
     <script>
-        // if(!location.search){
-        //     location.href='https://ditu.amap.com/';
-        // };
+        if(!location.search){
+            location.href='https://ditu.amap.com/';
+        };
     </script>
     <script src="https://webapi.amap.com/maps?v=1.4.14&key=47d57deacf67daf4fe68b31c3dcdc253"></script>
     <style>
@@ -22,7 +22,7 @@
         .in{
         position: absolute;
         top: 0;
-        right: 0;
+        right: 5px;
         z-index: 200;
         text-align: right;
         }
@@ -55,10 +55,6 @@
                 Juli.innerHTML='剩余路程：' + data.props.juli;
                 Time.innerHTML= data.props.time + '后到达';
             }
-            // console.log(gps)
-            // console.log(mudd)
-            // console.log(time)
-            // console.log(juli)
             AMap.convertFrom(gps, "gps", function (status, result) {
                 if (result.info === "ok") {
                     gaode = result.locations;//gps转高德坐标
@@ -76,20 +72,19 @@
                         position: gaode[gaode.length - 1],//添加点
                         offset: new AMap.Pixel(0, -50)//偏移
                     });
-                    let timems = new Date().getTime();//现在时间
-                    timems = parseInt((timems - data.locatetime) / 1000);//现在时间减最后上传时间
+                    let timems = parseInt((Date.now() - data.locatetime) / 1000);//现在时间减最后上传时间
                     function text() {
                         let ttt = timems >= 60 ? parseInt(timems / 60) + '分钟' : timems + '秒'
                         Text.setText(ttt + '前位置，速度' + data.speed + ' km/h');
                         timems++;
                     }//添加文字
-                    text()
+                    text();
                     che.moveAlong(gaode,10000)
                     if (timems < 60) {
                         let runid = setInterval(function () {
                             text();
                             if (timems > 60) {
-                                clearInterval(runid)
+                                clearInterval(runid);
                             };
                         }, 1000
                         )
