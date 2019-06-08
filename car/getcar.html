@@ -36,8 +36,6 @@
     <div class="in">
         <input type="button" value="@到达我这里要多久？" id="shijian" onclick="dingwei()">
         <div id="Mudd">未使用导航</div>
-        <div id="Juli"></div>
-        <div id="Time"></div>
     </div>      
     <script>
         let map = new AMap.Map("container");
@@ -51,9 +49,7 @@
             data.props && gps.push(data.props.shangyidian.split(','));
             gps.push(data.location.split(','));
             if(data.props && data.props.mudd){
-                Mudd.innerHTML='目的地：' + data.props.mudd;
-                Juli.innerHTML='剩余路程：' + data.props.juli;
-                Time.innerHTML= data.props.time + '后到达';
+                Mudd.innerHTML = '目的地：' + data.props.mudd + '<br>剩余路程：' + data.props.juli + '<br>' + data.props.time + '后到达';
             }
             AMap.convertFrom(gps, "gps", function (status, result) {
                 if (result.info === "ok") {
