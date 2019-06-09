@@ -21,7 +21,7 @@
         .in{
         position: absolute;
         top: 0;
-        right: 0;
+        right: 2px;
         z-index: 200;
         text-align: right;
         }
@@ -43,47 +43,43 @@
         <input type="button" value="" id="zuihoushijian">
     </div>
     <div class="in">
-        <input type="button" value="暂无数据" id="shijian"><br>
-        <input type="button" value="" id="xingshishijian"><br>
-        <input type="button" value="" id="gongli">
+        <input type="button" value="@到达我这里要多久？" id="shijian" onclick="dingwei()">
+        <div id="Xinxi"></div>
+        <div id="Mudd">未使用导航</div>
     </div>      
     <script>
         let map = new AMap.Map("container");
-        let xhr = new XMLHttpRequest();
-        let gps = {};
-        xhr.open('GET','https://tsapi.amap.com/v1/track/terminal/trsearch'+ location.search +'&key=8aeec61b8d5e8a187ef462f912760781&sid=8110&pagesize=999', true);
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4 && xhr.status === 200) {
-                // console.log('原始数据');
-                // console.log(xhr.responseText);
-                if(xhr.responseText.indexOf('counts":0')>0){
-                    alert('暂无数据');
-                }else{
-                    shijian.value='@到达我这里要多久？';
-                    shijian.onclick =()=>dingwei();
-                    gps = JSON.parse(xhr.responseText).data.tracks[0].points;
-                    let chufatime =gps[0].locatetime;
-                    let zuihoutime =gps[gps.length-1].locatetime;
-                    let xingshitime = parseInt((zuihoutime-chufatime)/60000);
-                    xingshitime = xingshitime/60>=1?parseInt(xingshitime/60)+'小时'+xingshitime%60+'分钟':xingshitime+'分钟';
-                    xingshishijian.value = '已行驶'+ xingshitime;
-                    chufatime = new Date(chufatime).toLocaleString('chinese',{hour12:false});
-                    zuihoutime = new Date(zuihoutime).toLocaleString('chinese',{hour12:false});
-                    chufashijian.value = '出发时间'+ chufatime;
-                    zuihoushijian.value = '位置最后更新时间'+ zuihoutime;
-                    // console.log("gps原始坐标");
-                    // console.log(gps);
-                    let gpsarr=[];
-                    for(let i=0;i<gps.length;i++){
-                        gpsarr.push(gps[i].location.split(','));
-                    }
-                    // console.log("gps数组gpsarr");
-                    // console.log(gpsarr);
-                    zhuangaode(gpsarr);
-                }
+        fetch('https://tsapi.amap.com/v1/track/terminal/trsearch' + location.search +'&key=8aeec61b8d5e8a187ef462f912760781&sid=8110&pagesize=999')
+            .then(res => res.json())
+            .then(res => one(res.data.tracks[0].points))
+            // .catch(er => alert('数据错误'))
+        let gps = [];
+        function one(data) {
+            console.log('原始数据');
+            console.log(data);
+            gps = data;
+            let data999 = data[data.length - 1].props;
+            console.log(data999)
+            if (data999 && data999.mudd) {
+                Mudd.innerHTML = '目的地：' + data999.mudd + '<br>剩余路程：' + data999.juli + '<br>' + data999.time + '后到达';
             }
+            let chufatime = data[0].locatetime;
+            let zuihoutime = data[data.length - 1].locatetime;
+            let xingshitime = parseInt((zuihoutime - chufatime) / 60000);
+            xingshitime = xingshitime >= 60 ? parseInt(xingshitime / 60) + '小时' + xingshitime % 60 + '分钟' : xingshitime + '分钟';
+            Xinxi.innerHTML = '已行驶' + xingshitime;
+            chufatime = new Date(chufatime).toLocaleString('chinese', { hour12: false });
+            zuihoutime = new Date(zuihoutime).toLocaleString('chinese', { hour12: false });
+            chufashijian.value = '出发时间' + chufatime;
+            zuihoushijian.value = '位置最后更新时间' + zuihoutime;
+            let gpsarr = [];
+            for (let i = 0; i < data.length; i++) {
+                gpsarr.push(data[i].location.split(','));
+            }
+            console.log("gps数组gpsarr");
+            console.log(gpsarr);
+            zhuangaode(gpsarr);
         }
-        xhr.send(null);
         let gaode = [];
         let dian0 = [];//起点
         let dian1 = [];//终点
@@ -91,8 +87,8 @@
             AMap.convertFrom(gpsarr, "gps", function(status, result) {
                 if (result.info === "ok") {
                     gaode = result.locations; //gps转高德
-                    // console.log("高德坐标gaode");
-                    // console.log(gaode);
+                    console.log("高德坐标gaode");
+                    console.log(gaode);
                     dian0 = [gaode[0].lng,gaode[0].lat];
                     dian1 = [gaode[gaode.length-1].lng,gaode[gaode.length-1].lat];
                     new AMap.Marker({ position:dian0, map:map });
@@ -122,13 +118,13 @@
                 gaode2.push({
                     x: gaode[i].lng,
                     y: gaode[i].lat,
-                    sp: 50,
+                    sp: 0,
                     ag: 0,
                     tm: tm
                 });
             }
-            // console.log("纠偏前高德对象gaode2");
-            // console.log(gaode2);
+            console.log("纠偏前高德对象gaode2");
+            console.log(gaode2);
             //开始纠偏
             let gaode3 = []; //纠偏后高德数组
             AMap.plugin("AMap.GraspRoad", function() {
@@ -137,16 +133,16 @@
                     if (!error) {
                         let newPath = result.data.points; //纠偏后的轨迹
                         li = result.data.distance; //里程
-                        // console.log("纠偏后的对象newPath");
-                        // console.log(newPath);
-                        gongli.value='已行驶'+ parseInt(li/1000) +'公里';
+                        console.log("纠偏后的对象newPath");
+                        console.log(newPath);
+                        Xinxi.innerHTML += '<br>已行驶' + parseInt(li / 1000) + '公里';
                         for (let i = 0; i < newPath.length; i++) {//对象转数组
                             gaode3.push([newPath[i].x, newPath[i].y]);
                         }
                         gaode3.unshift(dian0);//添加原始起点
                         gaode3.push(dian1);//添加原始终点
-                        // console.log("纠偏后数组gaode3");
-                        // console.log(gaode3);
+                        console.log("纠偏后数组gaode3");
+                        console.log(gaode3);
                         map.add(
                             new AMap.Polyline({
                                 path: gaode3,
