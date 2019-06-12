@@ -194,7 +194,8 @@
                         // 以下路线规划
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
-                                policy: AMap.DrivingPolicy.LEAST_TIME//最快方式
+                                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                                map: map
                             })
                             driving.search(gaode[gaode.length-1], my, function (status, result) {
                                 let fen = parseInt(result.routes[0].time/60)
