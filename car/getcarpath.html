@@ -19,17 +19,17 @@
             height: 100%;
         }
         .in{
-        position: absolute;
-        top: 0;
-        right: 2px;
-        z-index: 200;
-        text-align: right;
+            position: absolute;
+            top: 0;
+            right: 2px;
+            z-index: 200;
+            text-align: right;
         }
         .inleft{
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        z-index: 200;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 200;
         }
         #shijian{
             color: #00f;
@@ -55,11 +55,11 @@
             // .catch(er => alert('数据错误'))
         let gps = [];
         function one(data) {
-            console.log('原始数据');
-            console.log(data);
+            // console.log('原始数据');
+            // console.log(data);
             gps = data;
             let data999 = data[data.length - 1].props;
-            console.log(data999)
+            // console.log(data999)
             if (data999 && data999.mudd) {
                 Mudd.innerHTML = '目的地：' + data999.mudd + '<br>剩余路程：' + data999.juli + '<br>' + data999.time + '后到达';
             }
@@ -76,23 +76,24 @@
             for (let i = 0; i < data.length; i++) {
                 gpsarr.push(data[i].location.split(','));
             }
-            console.log("gps数组gpsarr");
-            console.log(gpsarr);
+            // console.log("gps数组gpsarr");
+            // console.log(gpsarr);
             zhuangaode(gpsarr);
         }
         let gaode = [];
-        let dian0 = [];//起点
-        let dian1 = [];//终点
+        let dian0 = [];//原始起点
+        let dian1 = [];//原始终点
+        let dian2 = [];//原始倒数第二个点
         function zhuangaode(gpsarr){
             AMap.convertFrom(gpsarr, "gps", function(status, result) {
                 if (result.info === "ok") {
                     gaode = result.locations; //gps转高德
-                    console.log("高德坐标gaode");
-                    console.log(gaode);
+                    // console.log("高德坐标gaode");
+                    // console.log(gaode);
                     dian0 = [gaode[0].lng,gaode[0].lat];
-                    dian1 = [gaode[gaode.length-1].lng,gaode[gaode.length-1].lat];
+                    dian1 = [gaode[gaode.length - 1].lng, gaode[gaode.length - 1].lat];
+                    dian2 = [gaode[gaode.length - 2].lng, gaode[gaode.length - 2].lat];
                     new AMap.Marker({ position:dian0, map:map });
-                    new AMap.Marker({ position:dian1, map:map });
                     map.add(
                         new AMap.Polyline({
                             path: gaode,
@@ -123,8 +124,8 @@
                     tm: tm
                 });
             }
-            console.log("纠偏前高德对象gaode2");
-            console.log(gaode2);
+            // console.log("纠偏前高德对象gaode2");
+            // console.log(gaode2);
             //开始纠偏
             let gaode3 = []; //纠偏后高德数组
             AMap.plugin("AMap.GraspRoad", function() {
@@ -133,16 +134,17 @@
                     if (!error) {
                         let newPath = result.data.points; //纠偏后的轨迹
                         li = result.data.distance; //里程
-                        console.log("纠偏后的对象newPath");
-                        console.log(newPath);
+                        // console.log("纠偏后的对象newPath");
+                        // console.log(newPath);
                         Xinxi.innerHTML += '<br>已行驶' + parseInt(li / 1000) + '公里';
                         for (let i = 0; i < newPath.length; i++) {//对象转数组
                             gaode3.push([newPath[i].x, newPath[i].y]);
                         }
                         gaode3.unshift(dian0);//添加原始起点
+                        gaode3.push(dian2);//原始倒数第二个点
                         gaode3.push(dian1);//添加原始终点
-                        console.log("纠偏后数组gaode3");
-                        console.log(gaode3);
+                        // console.log("纠偏后数组gaode3");
+                        // console.log(gaode3);
                         map.add(
                             new AMap.Polyline({
                                 path: gaode3,

@@ -104,13 +104,14 @@
                         // 以下路线规划
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
-                                policy: AMap.DrivingPolicy.LEAST_TIME//最快方式
+                                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                                map: map
                             })
                             driving.search(now, my, function (status, result) {
                                 let fen = parseInt(result.routes[0].time/60)
                                 fen = fen>60?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟'
                                 shijian.value='@到达我这里要多久？';
-                                alert('您的位置大概是：\n'+address +'\n\n到达您这里大概需要时间：\n' + fen)
+                                alert('您的位置大概是：\n' + address +'\n\n到达您这里大概需要时间：\n' + fen)
                             })
                         })
                         // 以上路线规划
