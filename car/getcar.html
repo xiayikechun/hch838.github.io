@@ -44,6 +44,7 @@
             // .catch(er => alert('数据错误'))
         let map = {};
         let che = {};
+        let gaode =[];
         function one(data){
             // console.log(data)
             let gps =[];
@@ -51,7 +52,7 @@
             gps.push(data.location.split(','));
             AMap.convertFrom(gps, "gps", function (status, result) {
                 if (result.info === "ok") {
-                    let gaode = result.locations;//gps转高德坐标
+                    gaode = result.locations;//gps转高德坐标
                     // console.log(gaode)
                     map = new AMap.Map("container",{
                         zoom: 18,
@@ -103,8 +104,8 @@
                 });
                 geolocation.getCurrentPosition(function(status,result){
                     if(status=='complete'){
-                        let my = [result.position.lng,result.position.lat];//使用人的位置
-                        let now = [gaode[gaode.length - 1].lng, gaode[gaode.length - 1].lat]
+                        let my = result.position;//使用人的位置
+                        let now = gaode[1];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
                         // driving.clear();
