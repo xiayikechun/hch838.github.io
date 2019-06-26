@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="600">
-    <title>我在这儿4</title>
+    <title>我在这儿5</title>
     <script>
         if(!location.search){
             location.href='https://ditu.amap.com/';
@@ -98,7 +98,7 @@
         }
         function dingwei() {
             shijian.value = '请稍等...';
-            driving.clear();
+            driving.length && driving.clear();
             // 以下定位模块
             AMap.plugin('AMap.Geolocation', function() {
                 var geolocation = new AMap.Geolocation({
