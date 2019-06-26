@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="600">
-    <title>我在这儿3</title>
+    <title>我在这儿4</title>
     <script>
         if(!location.search){
             location.href='https://ditu.amap.com/';
@@ -86,8 +86,8 @@
                         Mudd.innerHTML = '目的地：' + data.props.mudd;
                         two(gaode[1],data.props.zhongdiangps.split(','),data.speed);//有终点坐标就绘制轨迹并播放
                     }else{
-                        two(gaode[1], gaode[0],data.speed);//有终点坐标就绘制轨迹并播放
-                        // three(gaode)//没有终点坐标就只显示位置，两个点确定方向
+                        // two(gaode[1], gaode[0],data.speed);//有终点坐标就绘制轨迹并播放
+                        three(gaode)//没有终点坐标就只显示位置，两个点确定方向
                     }
                 }
             })
@@ -144,26 +144,20 @@
             // console.log(qi)
             // console.log(zhong)
             // console.log(speed)
-            new AMap.Marker({
-                map: map,
-                position: qi,
-            });
-            new AMap.Marker({
-                map: map,
-                position: zhong,
-                icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png'
-            });
             AMap.plugin('AMap.Driving', function() {
                 driving = new AMap.Driving({
                     policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
                     map: map,//显示路线
-                    hideMarkers:true,//隐藏首尾图标
+                    // hideMarkers:true,//隐藏首尾图标
                     autoFitView:false//不缩放
                 })
                 driving.search(qi, zhong, function (status, result) {
                     // console.log('终点规划');
                     // console.log(result);
-                    // console.log(result.routes[0].steps.length);
+                    new AMap.Marker({
+                        map: map,
+                        position: qi,
+                    });
                     let distance = result.routes[0].distance;
                     let time = result.routes[0].time;
                     distance = distance < 1000 ? distance + '米' : distance / 1000 + '公里';
@@ -187,7 +181,7 @@
                     // console.log(guiji);
                     che.moveAlong(guiji, speed * 3.6 < 40 ? 40 : speed * 3.6)
                     che.on('moveend',()=>{
-                        if (map.getZoom() > 15) {
+                        if (map.getZoom() === 18) {
                             map.setCenter(che.getPosition());//设置中心点
                         }
                         // map.setFitView();//聚焦
