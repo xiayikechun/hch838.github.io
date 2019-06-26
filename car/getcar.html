@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="600">
-    <title>我在这儿1</title>
+    <title>我在这儿2</title>
     <script>
         if(!location.search){
             location.href='https://ditu.amap.com/';
@@ -98,6 +98,7 @@
         }
         function dingwei() {
             shijian.value = '请稍等...';
+            driving.clear();
             // 以下定位模块
             AMap.plugin('AMap.Geolocation', function() {
                 var geolocation = new AMap.Geolocation({
@@ -106,6 +107,10 @@
                 });
                 geolocation.getCurrentPosition(function(status,result){
                     if(status=='complete'){
+                        new AMap.Marker({
+                            map: map,
+                            position: result.position//添加点
+                        });
                         new AMap.Text({
                             map: map,
                             position: result.position,//添加点
@@ -116,11 +121,11 @@
                         let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
-                        driving.length && driving.clear();
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
                                 policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
-                                map: map
+                                map: map,
+                                hideMarkers: true,//隐藏首尾图标
                             })
                             driving.search(now, result.position, function (status, result) {
                                 let fen = parseInt(result.routes[0].time / 60)
@@ -136,8 +141,8 @@
             // 以上定位模块
         }
         function two(qi,zhong, speed){
-            console.log(qi)
-            console.log(zhong)
+            // console.log(qi)
+            // console.log(zhong)
             // console.log(speed)
             let viaIcon = new AMap.Icon({
                 size: new AMap.Size(25, 34),
@@ -193,10 +198,7 @@
                         }
                     }
                     // console.log(guiji);
-                    che.moveAlong(guiji, speed < 17 ? 60 : speed * 3.6)
-                    // setTimeout(() => {
-                    //     driving.clear()
-                    // }, 3000);
+                    che.moveAlong(guiji, speed * 3.6 < 40 ? 40 : speed * 3.6)
                     che.on('moveend',()=>{
                         if (map.getZoom() > 15) {
                             map.setCenter(che.getPosition());//设置中心点
