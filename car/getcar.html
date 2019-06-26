@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="600">
-    <title>我在这儿2</title>
+    <title>我在这儿3</title>
     <script>
         if(!location.search){
             location.href='https://ditu.amap.com/';
@@ -86,8 +86,8 @@
                         Mudd.innerHTML = '目的地：' + data.props.mudd;
                         two(gaode[1],data.props.zhongdiangps.split(','),data.speed);//有终点坐标就绘制轨迹并播放
                     }else{
-                        // two(gaode[1], gaode[0],data.speed);//有终点坐标就绘制轨迹并播放
-                        three(gaode)//没有终点坐标就只显示位置，两个点确定方向
+                        two(gaode[1], gaode[0],data.speed);//有终点坐标就绘制轨迹并播放
+                        // three(gaode)//没有终点坐标就只显示位置，两个点确定方向
                     }
                 }
             })
@@ -120,7 +120,7 @@
                         // let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
-                        // driving.length || driving.clear();
+                        driving.url && driving.clear();
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
                                 policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
