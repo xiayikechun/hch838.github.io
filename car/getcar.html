@@ -100,12 +100,12 @@
             AMap.plugin('AMap.Geolocation', function() {
                 var geolocation = new AMap.Geolocation({
                     enableHighAccuracy: true,//是否使用高精度定位，默认:true
-                    timeout: 15000,          //超时
+                    timeout: 15000           //超时
                 });
                 geolocation.getCurrentPosition(function(status,result){
                     if(status=='complete'){
-                        let my = result.position;//使用人的位置
-                        let now = gaode[1];
+                        let my = [result.position.lng,result.position.lat];//使用人的位置
+                        let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
                         // driving.clear();
