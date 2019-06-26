@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="600">
-    <title>我在这儿</title>
+    <title>我在这儿1</title>
     <script>
         if(!location.search){
             location.href='https://ditu.amap.com/';
@@ -86,7 +86,8 @@
                         Mudd.innerHTML = '目的地：' + data.props.mudd;
                         two(gaode[1],data.props.zhongdiangps.split(','),data.speed);//有终点坐标就绘制轨迹并播放
                     }else{
-                        three(gaode)//没有终点坐标就只显示位置，两个点确定方向
+                        two(gaode[1], gaode[0],data.speed);//有终点坐标就绘制轨迹并播放
+                        // three(gaode)//没有终点坐标就只显示位置，两个点确定方向
                     }
                 }
             })
@@ -105,7 +106,13 @@
                 });
                 geolocation.getCurrentPosition(function(status,result){
                     if(status=='complete'){
-                        let my = [result.position.lng,result.position.lat];//使用人的位置
+                        new AMap.Text({
+                            map: map,
+                            position: result.position,//添加点
+                            offset: new AMap.Pixel(0, -50),//偏移
+                            text: '你大概在这里'
+                        });
+                        // let my = [result.position.lng,result.position.lat];//使用人的位置
                         let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
@@ -115,11 +122,11 @@
                                 policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
                                 map: map
                             })
-                            driving.search(now, my, function (status, result) {
-                                let fen = parseInt(result.routes[0].time/60)
-                                fen = fen>60?parseInt(fen/60)+'小时'+fen%60+'分钟':fen+'分钟'
-                                shijian.value='@到达我这里要多久？';
-                                alert('您的位置大概是：\n' + address +'\n\n到达您这里大概需要时间：\n' + fen)
+                            driving.search(now, result.position, function (status, result) {
+                                let fen = parseInt(result.routes[0].time / 60)
+                                fen = fen > 60 ? parseInt(fen / 60) + '小时' + fen % 60 + '分钟' : fen + '分钟'
+                                shijian.value = '@到达我这里要多久？';
+                                alert('您的位置大概是：\n' + address + '\n\n到达您这里大概需要时间：\n' + fen)
                             })
                         })
                         // 以上路线规划
@@ -129,8 +136,8 @@
             // 以上定位模块
         }
         function two(qi,zhong, speed){
-            // console.log(qi)
-            // console.log(zhong)
+            console.log(qi)
+            console.log(zhong)
             // console.log(speed)
             let viaIcon = new AMap.Icon({
                 size: new AMap.Size(25, 34),
