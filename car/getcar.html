@@ -96,7 +96,6 @@
         }
         function dingwei() {
             shijian.value = '请稍等...';
-            alert(6)
             // 以下定位模块
             AMap.plugin('AMap.Geolocation', function() {
                 var geolocation = new AMap.Geolocation({
@@ -109,7 +108,7 @@
                         let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
-                        driving.clear();
+                        driving && driving.clear();
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
                                 policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
