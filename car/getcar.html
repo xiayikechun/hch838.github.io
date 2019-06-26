@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="600">
-    <title>我在这儿1</title>
+    <title>我在这儿2</title>
     <script>
         if(!location.search){
             location.href='https://ditu.amap.com/';
@@ -120,7 +120,7 @@
                         // let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
-                        driving.length || driving.clear();
+                        // driving.length || driving.clear();
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
                                 policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
