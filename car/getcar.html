@@ -45,6 +45,7 @@
         let map = {};
         let che = {};
         let gaode =[];
+        let driving = {};
         function one(data){
             // console.log(data)
             let gps =[];
@@ -108,7 +109,7 @@
                         let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市','市\n');
                         // 以下路线规划
-                        driving && driving.clear();
+                        driving.length && driving.clear();
                         AMap.plugin('AMap.Driving', function() {
                             let driving = new AMap.Driving({
                                 policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
@@ -127,7 +128,6 @@
             });
             // 以上定位模块
         }
-        let driving = {};
         function two(qi,zhong, speed){
             // console.log(qi)
             // console.log(zhong)
