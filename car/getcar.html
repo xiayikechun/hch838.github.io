@@ -181,7 +181,7 @@
                         }
                     }
                     // console.log(guiji);
-                    che.moveAlong(guiji, speed * 3.6 < 40 ? 40 : speed * 3.6)
+                    che.moveAlong(guiji, speed < 40 ? 40 : speed)
                     che.on('moveend',()=>{
                         if (map.getZoom() === 18) {
                             map.setCenter(che.getPosition());//设置中心点
