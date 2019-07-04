@@ -10,7 +10,7 @@
             if (navigator.userAgent.indexOf('MicroMessenger') === -1) {
                 location.href = location.hash.replace('#', '');
             } else {
-                document.write('点右上角菜单=>在浏览器打开<br><br><br>10秒后自动关闭窗口')
+                document.write('点右上角菜单=>在浏览器打开<br><br><br>10秒后自动关闭本页面')
                 setTimeout(() => {
                     WeixinJSBridge.call('closeWindow');
                 }, 10000);
