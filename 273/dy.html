@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>用浏览器打开</title>
+    <title>要用浏览器打开</title>
+    <script>
+        if (location.hash) {
+            if (navigator.userAgent.indexOf('MicroMessenger') === -1) {
+                location.href = location.hash.replace('#', '');
+            } else {
+                document.write('在浏览器打开')
+            }
+        } else {
+            document.write('无参数')
+        }
+    </script>
 </head>
-<frameset>
-    <frame src="http://51-kdy.com/voddetail/yitiaogoudeshiming/index.html">
-</frameset>
+<body>
+</body>
 </html>
