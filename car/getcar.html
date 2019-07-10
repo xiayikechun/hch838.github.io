@@ -86,15 +86,14 @@
                         Mudd.innerHTML = '目的地：' + data.props.mudd;
                         two(gaode[1],data.props.zhongdiangps.split(','),data.speed);//有终点坐标就绘制轨迹并播放
                     }else{
-                        // two(gaode[1], gaode[0],data.speed);//有终点坐标就绘制轨迹并播放
-                        three(gaode)//没有终点坐标就只显示位置，两个点确定方向
+                        three()//没有终点坐标就只显示位置，两个点确定方向
                     }
                 }
             })
         }
-        function three(guiji) {
+        function three() {
             // console.log(guiji);
-            che.moveAlong(guiji,99999)
+            che.moveAlong(gaode,99999)
         }
         function dingwei() {
             shijian.value = '请稍等...';
@@ -156,41 +155,44 @@
                 driving.search(qi, zhong, function (status, result) {
                     // console.log('终点规划');
                     // console.log(result);
-                    new AMap.Marker({
-                        map: map,
-                        position: qi,
-                    });
                     let distance = result.routes[0].distance;
                     let time = result.routes[0].time;
                     distance = distance < 1000 ? distance + '米' : distance / 1000 + '公里';
                     if(time<60){
-                        time = time + '秒';
+                        driving.clear();
+                        three();
+                        Mudd.innerHTML += '<br>已到达'
                     }else{
+                        new AMap.Marker({
+                            map: map,
+                            position: qi,
+                        });
                         time = parseInt(time/60);
                         time = time > 60 ? parseInt(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
-                    }
-                    Mudd.innerHTML += '<br>剩余路程：' + distance + '<br>' + time + '后到达';
-                    let steps = result.routes[0].steps;
-                    let guiji = [];
-                    for(let i = 0; i < steps.length; i++) {
-                        // console.log(steps[i].path);
-                        let path = steps[i].path;
-                        for (let j = 0; j < path.length; j++) {
-                            // console.log(path[j]);
-                            guiji.push([path[j].lng, path[j].lat])
+                    
+                        Mudd.innerHTML += '<br>剩余路程：' + distance + '<br>' + time + '后到达';
+                        let steps = result.routes[0].steps;
+                        let guiji = [];
+                        for(let i = 0; i < steps.length; i++) {
+                            // console.log(steps[i].path);
+                            let path = steps[i].path;
+                            for (let j = 0; j < path.length; j++) {
+                                // console.log(path[j]);
+                                guiji.push([path[j].lng, path[j].lat])
+                            }
                         }
+                        // console.log(guiji);
+                        che.moveAlong(guiji, speed < 30 ? 30 : speed)
+                        che.on('moveend',()=>{
+                            if (map.getZoom() === 18) {
+                                map.setCenter(che.getPosition());//设置中心点
+                            }
+                            // map.setFitView();//聚焦
+                            // if(che.getPosition() === guiji[guiji.length - 1]){
+                            //     alert('已到达终点')
+                            // }
+                        })
                     }
-                    // console.log(guiji);
-                    che.moveAlong(guiji, speed < 40 ? 40 : speed)
-                    che.on('moveend',()=>{
-                        if (map.getZoom() === 18) {
-                            map.setCenter(che.getPosition());//设置中心点
-                        }
-                        // map.setFitView();//聚焦
-                        // if(che.getPosition() === guiji[guiji.length - 1]){
-                        //     alert('已到达终点')
-                        // }
-                    })
                 })
             })
         }
