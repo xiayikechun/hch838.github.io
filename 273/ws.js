@@ -6,11 +6,11 @@ const wss = new WebSocket.Server({
 })
 function yan(info){
     let url = info.req.url
-    // let i = url.search(6);
-    // if (i<0){
-    //     console.log('拒绝连接');
-    //     return false;
-    // }
+    let i = url.search(6);
+    if (i<0){
+        console.log('拒绝连接');
+        return false;
+    }
     console.log('通过连接' + url);
     return true;
 }
@@ -42,17 +42,17 @@ wss.on('connection',function(ws,req){
                 ws.send('找不到对象');
             }
         }else{//广播
-            wss.clients.forEach(function each(client) {
-                if (client !== ws && client.readyState === WebSocket.OPEN) {
-                    client.send(msg);
-                }
-            });
+            // wss.clients.forEach(function each(client) {
+            //     if (client !== ws && client.readyState === WebSocket.OPEN) {
+            //         client.send(msg);
+            //     }
+            // });
         }
 
-        if (online != wss._server._connections){
-            online = wss._server._connections;
-            ws.send('当前在线' + online + '个连接');
-        }
+        // if (online != wss._server._connections){
+        //     online = wss._server._connections;
+        //     ws.send('当前在线' + online + '个连接');
+        // }
         // ws.send(req.headers.origin)
         // ws.send(JSON.stringify(Array.from(wss.clients)))
         // ws.send(JSON.stringify(ws))
