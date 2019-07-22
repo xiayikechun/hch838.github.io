@@ -1,4 +1,5 @@
 //这是运行在node.js上的
+console.log('开始运行');
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({
     port:3030,
