@@ -60,9 +60,9 @@
             // console.log(data)
             //显示目的地
             if(oldgps != data.location){
-                    if(data.props.mudd){
+                    if(data.props.c){
                         console.log('有目的地')
-                        Mudd.innerHTML = '目的地：' + data.props.mudd;
+                        Mudd.innerHTML = '目的地：' + data.props.c;
                     }else{
                         console.log('没目的地')
                         Mudd.innerHTML = '未使用导航';
@@ -75,7 +75,7 @@
         //gps转高德坐标
         function zhuan(data){
             let gps = [];
-            gps.push(data.props.shangyidian.split(','));
+            gps.push(data.props.a.split(','));
             gps.push(data.location.split(','));
             console.log('开始转换坐标');
             AMap.convertFrom(gps, "gps", function (status, result) {
@@ -102,9 +102,9 @@
                         timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
                     })();
                     oldgaode ? ICO(gaode, data) : oldgaode = gaode[1];//保存位置下次用;//设置车标
-                    if(oldzhongdian != data.props.zhongdiangps){
-                        oldzhongdian = data.props.zhongdiangps;
-                        LUXIAN(gaode[1], data.props.zhongdiangps.split(','));
+                    if(oldzhongdian != data.props.b){
+                        oldzhongdian = data.props.b;
+                        LUXIAN(gaode[1], data.props.b.split(','));
                     }
                 }
             })
@@ -163,28 +163,26 @@
             console.log('显示到终点的路线');
             driving && driving.clear();//如果现有路线存在就清除掉
             Marker && map.remove(Marker);//删除终点图钉
-            AMap.plugin('AMap.Driving', function () {
-                driving = new AMap.Driving({
-                    policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
-                    map: map,//显示路线
-                    hideMarkers:true,//隐藏首尾图标
-                    autoFitView: false//不缩放
-                })
-                driving.search(qi, zhong, function (status, result) {
-                    let time = result.routes[0].time;
-                    // console.log(time)
-                    if (time < 60) {
-                        driving.clear();//已经到达，清除路线
-                        Mudd.innerHTML += '<br>已到达'
-                    } else {
-                        Marker = new AMap.Marker({ position: zhong, map: map });//添加终点图钉
-                        let gongli = result.routes[0].distance;
-                        gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
-                        time = Math.floor(time / 60);
-                        time = time > 60 ? Math.floor(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
-                        Mudd.innerHTML += '<br>剩余路程：' + gongli + '<br>' + time + '后到达';
-                    }
-                })
+            driving = new AMap.Driving({
+                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                map: map,//显示路线
+                hideMarkers:true,//隐藏首尾图标
+                autoFitView: false//不缩放
+            })
+            driving.search(qi, zhong, function (status, result) {
+                let time = result.routes[0].time;
+                // console.log(time)
+                if (time < 60) {
+                    driving.clear();//已经到达，清除路线
+                    Mudd.innerHTML += '<br>已到达'
+                } else {
+                    Marker = new AMap.Marker({ position: zhong, map: map });//添加终点图钉
+                    let gongli = result.routes[0].distance;
+                    gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
+                    time = Math.floor(time / 60);
+                    time = time > 60 ? Math.floor(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
+                    Mudd.innerHTML += '<br>剩余路程：' + gongli + '<br>' + time + '后到达';
+                }
             })
         }
         
