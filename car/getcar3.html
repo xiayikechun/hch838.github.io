@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>我在这儿</title>
     <script>
-        if(!location.search){
+        if (!location.search) {
             alert('缺少参数');
-            location.href='https://ditu.amap.com/';
+            location.href = 'https://ditu.amap.com/';
         };
     </script>
     <script src="https://webapi.amap.com/maps?v=1.4.15&key=47d57deacf67daf4fe68b31c3dcdc253"></script>
@@ -19,18 +20,21 @@
             margin: 0;
             height: 100%;
         }
-        .in{
+
+        .in {
             position: absolute;
             top: 0;
             left: 2px;
             color: #00f;
             font-weight: bold;
         }
-        #shijian{
+
+        #shijian {
             color: #00f;
         }
     </style>
 </head>
+
 <body>
     <div id="container"></div>
     <div class="in">
@@ -47,7 +51,7 @@
         let timeid;//每秒计算时间的id
         let Zhong;//终点图钉
         //获取云端数据
-        function gengxin(){
+        function gengxin() {
             console.log('获取云端数据')
             //下载数据
             fetch('https://tsapi.amap.com/v1/track/terminal/lastpoint' + location.search + '&key=8aeec61b8d5e8a187ef462f912760781&sid=8110&correction=n')
@@ -59,21 +63,21 @@
         function chuli(data) {
             // console.log(data)
             //显示目的地
-            if(oldgps != data.location){
-                    if(data.props.c){
-                        console.log('有目的地')
-                        Mudd.innerHTML = '目的地：' + data.props.c;
-                    }else{
-                        console.log('没目的地')
-                        Mudd.innerHTML = '未使用导航';
-                    }
+            if (oldgps != data.location) {
+                if (data.props.c) {
+                    console.log('有目的地')
+                    Mudd.innerHTML = '目的地：' + data.props.c;
+                } else {
+                    console.log('没目的地')
+                    Mudd.innerHTML = '未使用导航';
+                }
                 oldgps = data.location;
                 console.log('运行转换坐标')
                 zhuan(data);
             }
         }
         //gps转高德坐标
-        function zhuan(data){
+        function zhuan(data) {
             let gps = [];
             gps.push(data.props.a.split(','));
             gps.push(data.location.split(','));
@@ -110,21 +114,21 @@
             })
         }//gps转高德坐标
         //设置车标
-        function ICO(gaode,data){
+        function ICO(gaode, data) {
             console.log('更新车位置');
             clearInterval(timeid);//取消秒更新
             map.remove(text);//删除text
             // setTimeout(() => map.panTo(gaode[1]), 1000);//设置中心点
             che.moveAlong([oldgaode, ...gaode], 199);//移动图标
             oldgaode = gaode[1];//保存位置下次用
-            let icoid = setInterval(()=>
+            let icoid = setInterval(() =>
                 map.panTo(che.getPosition())
-                ,200);
+                , 200);
             che.on('moveend', () => {//移动完成
                 if (che.getPosition() === gaode[1]) {
                     console.log('取消自动平移');
                     clearInterval(icoid);
-                    text='';
+                    text = '';
                     timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
                 }
             })
@@ -159,7 +163,7 @@
         }
         //显示路线
         let driving;
-        function LUXIAN(qi, zhong){
+        function LUXIAN(qi, zhong) {
             console.log('显示到终点的路线');
             driving && driving.clear();//如果现有路线存在就清除掉
             Zhong && map.remove(Zhong);//删除终点图钉
@@ -167,7 +171,7 @@
                 driving = new AMap.Driving({
                     policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
                     map: map,//显示路线
-                    hideMarkers:true,//隐藏首尾图标
+                    hideMarkers: true,//隐藏首尾图标
                     autoFitView: false//不缩放
                 })
                 driving.search(qi, zhong, function (status, result) {
@@ -180,7 +184,7 @@
                         Zhong = new AMap.Marker({
                             position: zhong,
                             map: map,
-                            icon:'https://webapi.amap.com/theme/v1.3/markers/n/end.png'
+                            icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png'
                         });//添加终点图钉
                         let gongli = result.routes[0].distance;
                         gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
@@ -191,17 +195,14 @@
                 })
             })
         }
-        
         //定时获取云端数据
         gengxin()
-        setInterval(gengxin,10000)
-
-
+        setInterval(gengxin, 10000)
         function dingwei() {
             shijian.value = '请稍等...';
             // 以下定位模块
             AMap.plugin('AMap.Geolocation', function () {
-                var geolocation = new AMap.Geolocation({
+                let geolocation = new AMap.Geolocation({
                     enableHighAccuracy: true,//是否使用高精度定位，默认:true
                     timeout: 15000           //超时
                 });
@@ -244,8 +245,6 @@
             });
             // 以上定位模块
         }
-
-
         weixin();
         function weixin(xinxi) {
             fetch('https://tsapi.amap.com/v1/track/terminal/list?key=8aeec61b8d5e8a187ef462f912760781&sid=8110&tid=226389884')
@@ -285,4 +284,5 @@
         }
     </script>
 </body>
+
 </html>
