@@ -12,7 +12,7 @@
             location.href = 'https://ditu.amap.com/';
         };
     </script>
-    <script src="https://webapi.amap.com/maps?v=1.4.15&key=47d57deacf67daf4fe68b31c3dcdc253"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=47d57deacf67daf4fe68b31c3dcdc253&plugin=AMap.Driving"></script>
     <style>
         html,
         body,
@@ -50,6 +50,11 @@
         let oldzhongdian;
         let timeid;//每秒计算时间的id
         let Zhong;//终点图钉
+        let userAgent = navigator.userAgent.match(/(?<=\().+?(?=\))/i);
+        let uid = location.search.match(/uid.+/i);
+
+        // uid = uid.match(/uid.+/i);
+
         //获取云端数据
         function gengxin() {
             console.log('获取云端数据')
@@ -105,11 +110,12 @@
                         console.log('首次显示文字')
                         timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
                     })();
-                    oldgaode ? ICO(gaode, data) : oldgaode = gaode[1];//保存位置下次用;//设置车标
-                    if (oldzhongdian != data.props.b) {
-                        oldzhongdian = data.props.b;
-                        LUXIAN(gaode[1], data.props.b.split(','));
-                    }
+                    oldgaode ? ICO(gaode, data) : oldgaode = gaode[1];//移动车标，保存位置下次用
+                    // if (oldzhongdian != data.props.b) {
+                    //     oldzhongdian = data.props.b;
+                    //     driving = '';
+                    // }
+                    LUXIAN(gaode[1], data.props.b.split(','));
                 }
             })
         }//gps转高德坐标
@@ -118,7 +124,6 @@
             console.log('更新车位置');
             clearInterval(timeid);//取消秒更新
             map.remove(text);//删除text
-            // setTimeout(() => map.panTo(gaode[1]), 1000);//设置中心点
             che.moveAlong([oldgaode, ...gaode], 199);//移动图标
             oldgaode = gaode[1];//保存位置下次用
             let icoid = setInterval(() =>
@@ -167,32 +172,32 @@
             console.log('显示到终点的路线');
             driving && driving.clear();//如果现有路线存在就清除掉
             Zhong && map.remove(Zhong);//删除终点图钉
-            AMap.plugin('AMap.Driving', function () {
-                driving = new AMap.Driving({
-                    policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
-                    map: map,//显示路线
-                    hideMarkers: true,//隐藏首尾图标
-                    autoFitView: false//不缩放
-                })
-                driving.search(qi, zhong, function (status, result) {
-                    let time = result.routes[0].time;
-                    // console.log(time)
-                    if (time < 60) {
-                        driving.clear();//已经到达，清除路线
-                        Mudd.innerHTML += '<br>已到达'
-                    } else {
-                        Zhong = new AMap.Marker({
-                            position: zhong,
-                            map: map,
-                            icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png'
-                        });//添加终点图钉
-                        let gongli = result.routes[0].distance;
-                        gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
-                        time = Math.floor(time / 60);
-                        time = time > 60 ? Math.floor(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
-                        Mudd.innerHTML += '<br>剩余路程：' + gongli + '<br>' + time + '后到达';
-                    }
-                })
+            let drivingOption = {
+                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                map: map,//显示路线
+                hideMarkers: true,//隐藏首尾图标
+                autoFitView: false//不缩放
+            }
+            // driving && delete drivingOption.map;
+            driving = new AMap.Driving(drivingOption)//构造路线导航类
+            driving.search(qi, zhong, function (status, result) {
+                let time = result.routes[0].time;
+                // console.log(time)
+                if (time < 60) {
+                    driving.clear();//已经到达，清除路线
+                    Mudd.innerHTML += '<br>已到达'
+                } else {
+                    Zhong = new AMap.Marker({
+                        position: zhong,
+                        map: map,
+                        icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png'
+                    });//添加终点图钉
+                    let gongli = result.routes[0].distance;
+                    gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
+                    time = Math.floor(time / 60);
+                    time = time > 60 ? Math.floor(time / 60) + '小时' + time % 60 + '分钟' : time + '分钟';
+                    Mudd.innerHTML += '<br>剩余路程：' + gongli + '<br>' + time + '后到达';
+                }
             })
         }
         //定时获取云端数据
@@ -221,21 +226,20 @@
                         // let my = [result.position.lng,result.position.lat];//使用人的位置
                         // let now = [gaode[1].lng, gaode[1].lat];
                         let address = result.formattedAddress.replace('市', '市\n');
+                        // console.log(result)
+                        weixin('定位方式：' + result.location_type + '\n定位精度：' + result.accuracy + '\nTa的位置：' + address);
                         // 以下路线规划
                         // driving.url && driving.clear();
-                        AMap.plugin('AMap.Driving', function () {
-                            let driving1 = new AMap.Driving({
-                                policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
-                                map: map,
-                                hideMarkers: true,//隐藏首尾图标
-                            })
-                            driving1.search(oldgaode, result.position, function (status, result) {
-                                let fen = parseInt(result.routes[0].time / 60)
-                                fen = fen > 60 ? parseInt(fen / 60) + '小时' + fen % 60 + '分钟' : fen + '分钟'
-                                shijian.value = '@再看看到我这里要多久？';
-                                alert('您的位置大概是：\n' + address + '\n\n到达您这里大概需要时间：\n' + fen)
-                                weixin(address);
-                            })
+                        let driving1 = new AMap.Driving({
+                            policy: AMap.DrivingPolicy.LEAST_TIME,//最快方式
+                            map: map,
+                            hideMarkers: true,//隐藏首尾图标
+                        })
+                        driving1.search(oldgaode, result.position, function (status, result) {
+                            let fen = parseInt(result.routes[0].time / 60)
+                            fen = fen > 60 ? parseInt(fen / 60) + '小时' + fen % 60 + '分钟' : fen + '分钟'
+                            shijian.value = '@再看看到我这里要多久？';
+                            alert('您的位置大概是：\n' + address + '\n\n到达您这里大概需要时间：\n' + fen)
                         })
                         // 以上路线规划
                     } else {
@@ -251,16 +255,12 @@
                 .then(res => res.json())
                 .then(res => {
                     let i = res.data.results[0].props;
-                    let uid = location.search;
-                    uid = uid.match(/uid.+/i);
                     if (!xinxi) {
-                        let str = navigator.userAgent;
-                        str = str.match(/(?<=\().+?(?=\))/i);
                         // btoa(encodeURI(''))
-                        xinxi = decodeURI(atob('JUU2JTlDJTg5JUU0JUJBJUJBJUU2JTlGJUE1JUU4JUFGJUEyJUU0JUJBJTg2JUU2JTg4JTkxJUU3JTlBJTg0JUU0JUJEJThEJUU3JUJEJUFFJTIw'));
-                        xinxi += uid + '\n' + str;
+                        xinxi = decodeURI(atob('JUU2JTlGJUE1JUU4JUFGJUEyJUU0JUJBJTg2JUU2JTg4JTkxJUU3JTlBJTg0JUU0JUJEJThEJUU3JUJEJUFF'));
+                        xinxi = uid + xinxi + '\n' + userAgent;
                     } else {
-                        xinxi = uid + '\n' + xinxi;
+                        xinxi = uid + '\n' + userAgent + '\n' + xinxi;
                     }
                     // console.log(xinxi);
                     fetch('https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + i.a + i.b, {
