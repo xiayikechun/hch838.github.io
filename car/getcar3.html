@@ -124,7 +124,7 @@
             console.log('更新车位置');
             clearInterval(timeid);//取消秒更新
             map.remove(text);//删除text
-            che.moveAlong([oldgaode, ...gaode], 199);//移动图标
+            che.moveAlong([oldgaode, ...gaode], 600);//移动图标
             oldgaode = gaode[1];//保存位置下次用
             let icoid = setInterval(() =>
                 map.panTo(che.getPosition())
@@ -132,7 +132,6 @@
             che.on('moveend', () => {//移动完成
                 if (che.getPosition() === gaode[1]) {
                     console.log('取消自动平移');
-                    clearInterval(icoid);
                     text = '';
                     timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
                 }
@@ -140,6 +139,7 @@
         }
         //设置时间文字
         function TEXT(data) {
+            clearInterval(icoid);
             let time = Math.floor((Date.now() - data.locatetime) / 1000);//现在时间减最后上传时间
             // console.log(time)
             let d = Math.floor(time / 86400);
