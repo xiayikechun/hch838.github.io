@@ -119,7 +119,7 @@
                         che.moveAlong(gaode, 99999);
                         console.log('首次显示文字')
                         timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
-                        LUXIAN(gaode[1], data.props.b.split(','));
+                        data.props.b && LUXIAN(gaode[1], data.props.b.split(','));
                     })();
                     oldgaode ? ICO(gaode, data) : oldgaode = gaode[1];//移动车标，保存位置下次用
                     // if (oldzhongdian != data.props.b) {
