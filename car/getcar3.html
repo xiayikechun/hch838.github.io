@@ -145,7 +145,7 @@
                     text = '';
                     timeid = setInterval(() => TEXT(data), 1000);//设置时间文字
                     clearInterval(icoid);
-                    LUXIAN(gaode[1], data.props.b.split(','));
+                    data.props.b && LUXIAN(gaode[1], data.props.b.split(','));
                 }
             })
         }
