@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.bootcss.com/pako/1.0.10/pako.min.js"></script>
+</head>
+<body>
+    <script>
+        let i = location.search;
+        i = i.replace(/^\?/, '');
+        location.href = i
+        function JieMi(b64Data) {//解密
+            let strData = atob(b64Data);
+            let charData = strData.split('').map((x) => { return x.charCodeAt(0) });
+            let binData = new Uint8Array(charData);
+            let data = pako.inflate(binData);
+            let arr = new Uint8Array(data);
+            let str = '';
+            for (let i = 0; i < arr.length; i++) {
+                str += String.fromCharCode(arr[i])
+            }
+            return(decodeURIComponent(escape(str)))
+        }
+    </script>
+</body>
+</html>
