@@ -1,5 +1,5 @@
 <script>
-    if(location.search){
+    if(location.search.search(/\?/) == 0) {
         let i = location.search;
         i = i.replace(/^\?/, '');
         location.href = i
