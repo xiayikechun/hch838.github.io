@@ -1,6 +1,9 @@
-<h2>使用浏览器打开</h2>
 <script>
-    let i = location.search;
-    i = i.replace(/^\?/, '');
-    location.href = i
+    if(location.search){
+        let i = location.search;
+        i = i.replace(/^\?/, '');
+        location.href = i
+    }else{
+        alert('请使用浏览器打开')
+    }
 </script>
