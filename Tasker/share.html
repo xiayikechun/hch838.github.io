@@ -9,28 +9,29 @@
         #h2{
             text-align: center;
         }
-        #btn,a{
+        #btn,#aaa{
             display: block;
             margin: 10px auto;
         }
     </style>
 </head>
 <body>
-    <h2 id="h2"></h2>
+    <h2 id="h2">没有配置或运行错误</h2>
+    <a id="aaa">导入</a>
     <input id="btn" type="button" value="导入">
-    <!-- <a id="a" href="https://www.baidu.com/"><input id="in" type="button" value="导入"></a> -->
-    <pre id="div1"></pre>
+    <pre id="div1">没有配置或运行错误</pre>
     <script>
-        console.log(location.search);
+        // console.log(location.search);
         let i = location.search;
         i = i.replace(/^\?/, '');
+        aaa.href = i;
         btn.onclick = () => location.href = i;
         let j = i.replace(/^taskertask:\/\//, '');
-        console.log(j);
+        // console.log(j);
         j = JieMi(j);
         div1.textContent = j;
         j = j.match(/(?<=nme\>).+(?=<\/nme)/i);
-        console.log(j[0]);
+        // console.log(j[0]);
         h2.innerHTML = j;
 
         // function JiaMi(str) {//加密
