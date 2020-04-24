@@ -26,7 +26,7 @@
         i = i.replace(/^\?/, '');
         aaa.href = i;
         btn.onclick = () => location.href = i;
-        let j = i.replace(/^taskertask:\/\//, '');
+        let j = i.replace(/^.+?:\/\//, '');
         // console.log(j);
         j = JieMi(j);
         div1.textContent = j;
