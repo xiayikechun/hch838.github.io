@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线导入Tasker配置</title>
+    <script src="https://cdn.bootcss.com/pako/1.0.10/pako.min.js"></script>
+    <style>
+        h2,h3{
+            text-align: center;
+        }
+        #bbbb,#dddd{
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="idh2">h2</h2>
+    <h3 id="idh3">没有配置或运行错误</h3>
+    <a id="aaa">在线导入</a>
+    <a id="ddd">下载文件</a>
+    <input id="bbbb" type="button" value="在线导入">
+    <input id="dddd" type="button" value="下载文件">
+    <pre id="pre">没有配置或运行错误</pre>
+
+
+    <script>
+        let i = location.search;
+        i = i.replace(/^\?/, '');//去掉第1个问号
+
+        j = JieMi(i);
+        pre.textContent = j;//显示配置原文
+
+        let h = '';//链接类型
+        let x = '';//文件后缀
+        let name='';//文件名
+        if(j.search(/Project/i)>0){
+            h = 'taskerproject://';
+            x = '.prj.xml'
+            idh2.innerHTML = '项目';
+            name = j.match(/(?<=name\>).+(?=<\/name)/i)
+        }else if(j.search(/Profile/i)>0){
+            h = 'taskerprofile://';
+            x = '.prf.xml'
+            idh2.innerHTML = '配置';
+            let k = j.replace(/\s/g,'');
+            k = k.match(/Profile.+Profile/i);
+            name = k[0].match(/(?<=nme\>).+(?=<\/nme)/i)
+        }else{
+            h = 'taskertask://';
+            x = '.tsk.xml'
+            idh2.innerHTML = '任务';
+            name = j.match(/(?<=nme\>).+(?=<\/nme)/i)
+        }
+        idh3.innerHTML = name + x;//文件名
+
+        aaa.href = h + i;
+        ddd.href = 'data:text/plain;charset=utf-8,' + j;
+        ddd.download = name + x;
+
+        bbbb.onclick = () => location.href = h + i;
+        dddd.onclick=()=>ddd.click();
+
+        function JieMi(b64Data) {//解密
+            let strData = atob(b64Data);
+            let charData = strData.split('').map((x) => { return x.charCodeAt(0) });
+            let binData = new Uint8Array(charData);
+            let data = pako.inflate(binData);
+            let arr = new Uint8Array(data);
+            let str = '';
+            for (let i = 0; i < arr.length; i++) {
+                str += String.fromCharCode(arr[i])
+            }
+            return(decodeURIComponent(escape(str)))
+        }
+    </script>
+</body>
+</html>
