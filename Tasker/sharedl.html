@@ -89,7 +89,7 @@
             fetch('https://tsapi.amap.com/v1/track/terminal/list?key=8aeec61b8d5e8a187ef462f912760781&sid=39156&tid=' + i)
                 .then(res => res.json())
                 .then(res => {
-                    idh4.innerHTML = '踩下第' + res.data.results[0].props.n + '个脚印';
+                    idh4.innerHTML = '留下第' + res.data.results[0].props.n + '个脚印';
                     let n = res.data.results[0].props.n + 1;
                     fetch('https://tsapi.amap.com/v1/track/terminal/update?key=8aeec61b8d5e8a187ef462f912760781&sid=39156&tid=' + i + '&props={"n":' + n + '}', { "method": 'POST' })
                 })
