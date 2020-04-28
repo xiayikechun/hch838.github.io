@@ -55,12 +55,12 @@
             let h = '';//链接类型
             let x = '';//文件后缀
             let name='';//文件名
-            if(j.search(/Project/i)>0){
+            if(j.search(/\<Project/i)>0){
                 h = 'taskerproject://';
                 x = '.prj.xml'
                 idh2.innerHTML = '项目';
                 name = j.match(/(?<=name\>).+(?=<\/name)/i)
-            }else if(j.search(/Profile/i)>0){
+            }else if(j.search(/\<Profile/i)>0){
                 h = 'taskerprofile://';
                 x = '.prf.xml'
                 idh2.innerHTML = '配置';
