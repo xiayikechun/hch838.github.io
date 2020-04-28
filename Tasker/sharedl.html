@@ -76,7 +76,9 @@
             idh3.innerHTML = name + x;//文件名
 
             aaa.href = h + i;
-            ddd.href = URL.createObjectURL(new Blob([j]))
+            ddd.href = URL.createObjectURL(new Blob([j], {
+                type: "text/plain;charset=utf-8"
+            }))
             ddd.download = name + x;
 
             bbbb.onclick = () => location.href = h + i;
