@@ -59,19 +59,19 @@
                 h = 'taskerproject://';
                 x = '.prj.xml'
                 idh2.innerHTML = '项目';
-                name = j.match(/(?<=name\>).+(?=<\/name)/i)
+                name = j.match(/(?<=name\>).+(?=\<\/name)/i)
             }else if(j.search(/\<Profile/i)>0){
                 h = 'taskerprofile://';
                 x = '.prf.xml'
                 idh2.innerHTML = '配置';
                 let k = j.replace(/\s/g,'');
-                k = k.match(/Profile.+Profile/i);
-                name = k[0].match(/(?<=nme\>).+(?=<\/nme)/i)
+                k = k.match(/\<Profile.+\<\/Profile/i);
+                name = k[0].match(/(?<=nme\>).+(?=\<\/nme)/i)
             }else{
                 h = 'taskertask://';
                 x = '.tsk.xml'
                 idh2.innerHTML = '任务';
-                name = j.match(/(?<=nme\>).+(?=<\/nme)/i)
+                name = j.match(/(?<=nme\>).+(?=\<\/nme)/i)
             }
             idh3.innerHTML = name + x;//文件名
 
