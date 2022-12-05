@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>查看最新位置</title>
     <style>
         html,
         body,
@@ -18,7 +18,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 300px;
+            width: 100%;
             z-index: 200;
         }
 
@@ -80,7 +80,7 @@
                             marker = new AMap.Marker({
                                 map: map,
                                 position: [x, y],
-                                icon: "https://27315.app/car/00.png",
+                                icon: "https://27315.app/y/0.png",
                                 offset: new AMap.Pixel(-12, -24)
                             });
                         });
@@ -115,7 +115,7 @@
             h = h ? h + '小时' : '';
             m = m ? m + '分' : '';
             s = s ? s + '秒' : '';
-            shijian.value = d + h + m + s;
+            shijian.value = d + h + m + s + ' 前更新';
         }
 
 
