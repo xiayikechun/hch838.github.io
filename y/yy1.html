@@ -146,7 +146,7 @@
         function GetData() {
             console.log('获取云端数据' + pi)
             let i = document.createElement('script');
-            i.src = "https://yingyan.baidu.com/api/v3/track/gettrack?callback=BaiDu&coord_type_output=gcj02&page_size=500&page_index=" + pi + "&" + location.search.substr(1);
+            i.src = "https://yingyan.baidu.com/api/v3/track/gettrack?callback=BaiDu&coord_type_output=gcj02&page_size=600&page_index=" + pi + "&" + location.search.substr(1);
             document.body.appendChild(i);
             document.body.removeChild(i);
         }
