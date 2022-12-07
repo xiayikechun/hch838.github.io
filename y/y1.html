@@ -45,8 +45,6 @@
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <script>
         let key = JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}')
-
-        // console.log(key);
         let map, marker, at, xx, yy;
         let loc_time = 0;
 
@@ -122,7 +120,7 @@
         function GetData() {
             console.log('获取云端数据')
             let i = document.createElement('script');
-            i.src = "https://yingyan.baidu.com/api/v3/track/getlatestpoint?ak=" + key.ak + "&service_id=" + key.sid + "&entity_name=" + key.name + "&coord_type_output=gcj02&callback=BaiDu&ttt=" + Date.now();
+            i.src = "https://yingyan.baidu.com/api/v3/track/getlatestpoint?callback=BaiDu&coord_type_output=gcj02&ttt=" + Date.now() + "&" + location.search.substr(1);
             document.body.appendChild(i);
             document.body.removeChild(i);
         }
