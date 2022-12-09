@@ -126,7 +126,7 @@
                 passedPolyline.setPath(e.passedPath);
                 map.setCenter(e.passedPos);
                 if (e.progress === 1) {
-                    time = new Date(1000 * loctime[e.index]).toLocaleString('chinese', { hour12: false });
+                    time = new Date(1000 * loctime[e.index]).toLocaleString('chinese');
 
                     marker.setLabel({
                         "content": time + " " + speed[e.index].toFixed(0) + "km/h",
@@ -135,13 +135,25 @@
                 }
             });
 
-            setTimeout(function () {
-                marker.moveAlong(guiji, {
-                    duration: 50,
-                    autoRotation: at,
-                });
-            }, 2000)
+            marker.on('movealong', function () {
+                dj = 2;
+                console.log('移动结束')
+            })
+
+
+
+            setTimeout(Go, 2000)
         }
+
+        function Go() {
+            marker.moveAlong(guiji, {
+                duration: 50,
+                autoRotation: at
+            });
+        }
+
+
+
 
         function GetData() {
             console.log('获取云端数据' + pi)
@@ -178,8 +190,12 @@
                 dj = 0;
                 marker.pauseMove();
             } else {
+                if (dj === 2) {
+                    Go()
+                } else {
+                    marker.resumeMove();
+                }
                 dj = 1;
-                marker.resumeMove();
             }
         }
 
