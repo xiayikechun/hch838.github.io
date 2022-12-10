@@ -50,12 +50,12 @@
 
 <body>
     <div id='container'>加载中...</div>
-    <input type="button" value="" id="mdd">
+    <input type="button" value="" id="mdd" onclick="Chongxinguihua()">
     <input type="button" value="" id="shijian">
-    <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
+    <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253&plugin=AMap.Driving'></script>
     <script>
         let key = JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}')
-        let map, marker, at, xx, yy, desc;
+        let map, marker, at, xx, yy, desc, driving, mddico;
         let loc_time = 0;
 
         function BaiDu(i) {
@@ -99,20 +99,27 @@
                     setInterval(() => Shijian(), 1000);//动态更新时间
                 } else if (x !== xx && y !== yy) {
                     console.log('位置更新了');
-                    //更新位置
                     xx = x;
                     yy = y;
                     marker.moveTo([x, y], {
                         duration: key.ms,
                         autoRotation: at
                     });
-                    let moveid = setInterval(() => map.setFitView(), 20);//保证所有覆盖物都在视野范围内
+                    let moveid = setInterval(() => {
+                        p = marker.getPosition();
+                        map.setCenter([p.lng, p.lat]);
+                    }, 20);//设置定位点为中心
                     setTimeout(() => clearInterval(moveid), key.ms);
                 }
                 loc_time = j.loc_time;
-                if (desc !== i.entities[0].entity_desc && i.entities[0].entity_desc != 0) {
+
+                if(i.entities[0].entity_desc == 0){
+                    mddico && mddico.remove();
+                    driving && driving.clear();//如果现有路线存在就清除掉
+                    mdd.style = 'visibility: hidden';
+                }else if (desc !== i.entities[0].entity_desc) {
                     desc = i.entities[0].entity_desc;
-                    Mudidi();
+                    Mudidi([x, y]);//发送的是起点
                 }
             }
         }
@@ -130,11 +137,38 @@
             shijian.value = d + h + m + s + ' 前更新';
         }
 
-        function Mudidi() {
+        function Mudidi(start) {
             a = desc.match(/(?<=---).+?(?=---)/)
             g = desc.replaceAll('_', '.').match(/\d+\.\d{1,6}/g);
-            mdd.value = '目的地：' + a;
-            mdd.style = 'visibility: visible';
+            mddico && mddico.remove();
+            mddico = new AMap.Marker({
+                map: map,
+                position: [g[0], g[1]],
+                icon: "http://a.amap.com/jsapi/static/image/plugin/marker/end.png",
+                offset: new AMap.Pixel(-25, -60)
+            });
+
+            driving && driving.clear();//如果现有路线存在就清除掉
+            driving = new AMap.Driving({
+                map: map,//显示路线
+                hideMarkers: true,//隐藏首尾图标
+                autoFitView: false//不缩放
+            });
+
+            driving.search(start, [g[0], g[1]], function (status, result) {
+                sytime = result.routes[0].time;
+                gongli = result.routes[0].distance;
+                gongli = gongli < 1000 ? gongli + '米' : Math.floor(gongli / 1000) + '公里';
+                sytime = Math.floor(sytime / 60);
+                sytime = sytime > 60 ? Math.floor(sytime / 60) + '小时' + sytime % 60 + '分钟' : sytime + '分钟';
+                mdd.value = sytime + '后到达' + a + ' 剩余' + gongli;
+                mdd.style = 'visibility: visible';
+            });
+        }
+
+        function Chongxinguihua() {
+            p = marker.getPosition();
+            Mudidi([p.lng, p.lat]);//发送的是起点
         }
 
         function GetData() {
