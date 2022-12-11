@@ -125,7 +125,7 @@
             marker.on('moving', function (e) {
                 passedPolyline.setPath(e.passedPath);
                 map.setCenter(e.passedPos);
-                if (e.progress === 1) {
+                if (!at && e.progress === 1) {
                     time = new Date(1000 * loctime[e.index]).toLocaleString('zh', { hour12: false });
 
                     marker.setLabel({
