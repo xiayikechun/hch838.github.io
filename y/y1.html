@@ -115,7 +115,7 @@
                 //显示路径
                 time = Math.floor(Date.now() / 1000 - loc_time);//现在时间减最后上传时间
                 
-                if (time < 20 && desc != i.entities[0].entity_desc) {
+                if (time < 600 && desc != i.entities[0].entity_desc) {
                     desc = i.entities[0].entity_desc;
                     console.log(desc);
                     if (desc == 0) {
