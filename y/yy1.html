@@ -79,7 +79,7 @@
         }
 
         function GaoDe() {
-
+            container.innerHTML = '有' + guiji.length + '个坐标点';
             map = new AMap.Map("container", {
                 zoom: 17,
                 center: guiji[0]
@@ -126,7 +126,7 @@
                 passedPolyline.setPath(e.passedPath);
                 map.setCenter(e.passedPos);
                 if (e.progress === 1) {
-                    time = new Date(1000 * loctime[e.index]).toLocaleString('chinese');
+                    time = new Date(1000 * loctime[e.index]).toLocaleString('zh', { hour12: false });
 
                     marker.setLabel({
                         "content": time + " " + speed[e.index].toFixed(0) + "km/h",
