@@ -167,7 +167,7 @@
         function Getlicheng() {
             console.log('获取里程数据')
             let i = document.createElement('script');
-            i.src = "https://yingyan.baidu.com/api/v3/track/getdistance?callback=BaiDulicheng&ak=" + key.ak + "&service_id=" + key.service_id + "&entity_name=" + key.entity_name + "&start_time=" + key.start_time + "&end_time=" + endtime;
+            i.src = "https://yingyan.baidu.com/api/v3/track/getdistance?callback=BaiDulicheng&ak=" + key.ak + "&service_id=" + key.service_id + "&entity_name=" + key.entity_name + "&start_time=" + key.start_time + "&end_time=" + endtime + "&ttt=" + Date.now();
             document.body.appendChild(i);
             document.body.removeChild(i);
         }
