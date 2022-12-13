@@ -55,7 +55,7 @@
         function BaiDu(j) {
             t = JSON.stringify(j.points);
             t = t.match(/(?<=de":)\d+\.\d{1,6}/g)
-
+            let n;
             for (let i = 0; i < j.points.length; i++) {
                 guiji.push([1 * t[2 * i + 1], 1 * t[2 * i]]);
                 loctime.push(j.points[i].loc_time);
@@ -68,7 +68,7 @@
                     }
                 }
             }
-
+            n = n ? n : key.duan + 1;
             if (n > key.duan || j.end_point.loc_time === j.points[j.points.length - 1].loc_time) {
                 endtime = endtime ? endtime : j.end_point.loc_time;
                 Getlicheng();
@@ -140,9 +140,9 @@
                 console.log('移动结束')
             })
 
-
-
-            setTimeout(Go, 2000)
+            if (guiji.length > 1) {
+                setTimeout(Go, 2000)
+            }
         }
 
         function Go() {
