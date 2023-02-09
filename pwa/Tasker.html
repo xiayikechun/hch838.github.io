@@ -13,7 +13,7 @@
 <body>
 </body>
 <script>
-    let i = 2;
+    let i = 0;
     let url = ['ws://mq.tongxinmao.com:18832/mqtt',//深圳
         'wss://mqtt.eclipseprojects.io:443/mqtt',//美国
         'wss://broker-cn.emqx.io:8084/mqtt',//美国
@@ -37,6 +37,11 @@
     MQTT.on('message', function (topic, m) {
         document.getElementsByTagName("body")[0].innerHTML += m.toString() + '<br>';
     })
+</script>
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js', { scope: '/' });
+    }
 </script>
 
 </html>
