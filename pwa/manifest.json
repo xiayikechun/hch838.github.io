@@ -11,7 +11,7 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "/Tasker.png",
+      "src": "Tasker.png",
       "sizes": "512x512"
     }
   ]
