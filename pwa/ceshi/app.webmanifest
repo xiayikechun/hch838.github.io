@@ -9,7 +9,7 @@
     "id": "27315",
     "icons": [
         {
-            "src": "/icon512.png",
+            "src": "icon512.png",
             "type": "image/png",
             "sizes": "512x512"
         }

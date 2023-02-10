@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
-    <link rel="manifest" href="/app.webmanifest">
+    <link rel="manifest" href="app.webmanifest">
     <title>Tasker互联</title>
 </head>
 
@@ -14,7 +14,7 @@
 </body>
 <script>
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/serviceworker.js");
+        navigator.serviceWorker.register("serviceworker.js");
     }
     document.addEventListener("click", () => {
         Notification.requestPermission().then(permission => {
