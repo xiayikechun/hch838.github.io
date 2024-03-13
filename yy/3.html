@@ -38,7 +38,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本8" id="shijian">
+    <input type="button" value="版本9" id="shijian">
 
 </body>
 <script>
@@ -109,22 +109,28 @@
         //定位控件
         AMap.plugin("AMap.Geolocation", function () {
             geolocation = new AMap.Geolocation({
-                "enableHighAccuracy": true, // 是否使用高精度定位，默认：true
-                "offset": [10, 50],  // 定位按钮的停靠位置的偏移量
-                "zoomToAccuracy": true,  //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-                "position": 'RB' //  定位按钮的排放位置,  RB表示右下
+                buttonSize:"20px",
+                borderColor: "red",
+                enableHighAccuracy: true, //高精度定位
+                offset: [10, 50],  // 按钮偏移量
+                position: 'RB' //  定位按钮的排放位置,  RB表示右下
             })
-
+            //显示定位按钮
             map.addControl(geolocation)
-
+            //定位成功时
             geolocation.on('complete', function (m) {
+                alert('高德坐标'+m.isConverted)
                 new AMap.Marker({
                     map: map,
                     position: m.position,
+                    label: {
+                        content: '我的位置',
+                        direction: top
+                    }
                 })
                 map.setFitView();
             })
-
+            //定位结束
         })
 
 
