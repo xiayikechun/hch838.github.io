@@ -38,7 +38,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本7" id="shijian">
+    <input type="button" value="版本8" id="shijian">
 
 </body>
 <script>
@@ -118,8 +118,11 @@
             map.addControl(geolocation)
 
             geolocation.on('complete', function (m) {
+                new AMap.Marker({
+                    map: map,
+                    position: m.position,
+                })
                 map.setFitView();
-                // alert(m.position.lng + ',' + m.position.lat)
             })
 
         })
