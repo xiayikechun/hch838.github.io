@@ -38,7 +38,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本9" id="shijian">
+    <input type="button" value="版本10" id="shijian">
 
 </body>
 <script>
@@ -109,11 +109,10 @@
         //定位控件
         AMap.plugin("AMap.Geolocation", function () {
             geolocation = new AMap.Geolocation({
-                buttonSize:"20px",
-                borderColor: "red",
-                enableHighAccuracy: true, //高精度定位
                 offset: [10, 50],  // 按钮偏移量
-                position: 'RB' //  定位按钮的排放位置,  RB表示右下
+                convert: true, //转高德坐标
+                position: 'RB', //  定位按钮的排放位置,  RB表示右下
+                enableHighAccuracy: true //高精度定位
             })
             //显示定位按钮
             map.addControl(geolocation)
