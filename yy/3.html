@@ -26,7 +26,7 @@
 
         #shijian {
             position: absolute;
-            bottom: 0;
+            bottom: 6px;
             left: 0;
             width: 100%;
             z-index: 200;
@@ -37,7 +37,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本3" id="shijian">
+    <input type="button" value="版本4" id="shijian">
 
 </body>
 <script>
@@ -49,12 +49,12 @@
     MQTT.onMessageArrived = onMessageArrived;//收到消息时
     MQTT.connect({
         "useSSL": true,
-        "onSuccess": () => {
+        "onSuccess": () => {//连接确认时
             MQTT.subscribe('clip', {//订阅主题
                 "onSuccess": () => mdd.value += '订阅成功',
                 "onFailure": () => mdd.value = '订阅失败'
             });
-        },//连接确认时
+        },
         "onFailure": () => mdd.value = '连接失败',//连接请求失败或超时
         "reconnect": true //连接丢失时会尝试重新连接
     });
@@ -69,17 +69,30 @@
 
     fetch('https://apis.bemfa.com/va/getmsg?uid=6a685d7b4d7f45a1bf5540e21a08e69c&topic=clip&type=1')
         .then(res => res.json())
-        .then(res => mdd.value += JSON.parse(res.data[0].msg).a)
+        .then(res => {
+            d = JSON.parse(res.data[0].msg)
+            //显示地图
+            mdd.value += d.a
+            map = new AMap.Map("container", {
+                zoom: 18,
+                center: d.a
+            });
+            //显示小车
+            AMap.plugin('AMap.MoveAnimation', function () {
+                marker = new AMap.Marker({
+                    map: map,
+                    position: d.a,
+                    icon: "https://27315.app/y/0.png",
+                    offset: new AMap.Pixel(-12, -24)
+                });
+            });
+        })
 
 
 
 
 
 
-    map = new AMap.Map("container", {
-        zoom: 18,
-        center: [114.023908, 22.653854]
-    });
 
 
 
