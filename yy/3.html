@@ -38,7 +38,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本5" id="shijian">
+    <input type="button" value="版本6" id="shijian">
 
 </body>
 <script>
@@ -97,7 +97,7 @@
             KongJian()
         })
 
-    //以下定位模块
+    //以下控件
     function KongJian() {
         //放大缩小控件
         AMap.plugin("AMap.ToolBar", function () {
@@ -108,12 +108,19 @@
         });
         //定位控件
         AMap.plugin("AMap.Geolocation", function () {
-            map.addControl(new AMap.Geolocation({
+            geolocation = new AMap.Geolocation({
                 "enableHighAccuracy": true, // 是否使用高精度定位，默认：true
                 "offset": [10, 50],  // 定位按钮的停靠位置的偏移量
                 "zoomToAccuracy": true,  //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
                 "position": 'RB' //  定位按钮的排放位置,  RB表示右下
-            }))
+            })
+
+            map.addControl(geolocation)
+
+            geolocation.on('complete', function (m) {
+                alert(m.position.lng + ',' + m.position.lat)
+            })
+
         })
 
 
