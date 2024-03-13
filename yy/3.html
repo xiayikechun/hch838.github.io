@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高德</title>
+    <title>我的位置</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <style>
@@ -15,18 +15,72 @@
             margin: 0;
             height: 100%;
         }
+
+        #mdd {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 200;
+            /* visibility: hidden; */
+        }
+
+        #shijian {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 200;
+        }
     </style>
 </head>
 
 <body>
-    <div id='container'>加载中...</div>
+    <div id='container'></div>
+    <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
+    <input type="button" value="456" id="shijian">
+
 </body>
 <script>
-    // let doc = document.getElementsByTagName("body")[0];
-    // doc.innerHTML += '开始连接...<br>';
+    // let mdd = document.getElementById("mdd");
+
+    let MQTT = new Paho.Client('bemfa.com', 9504, '/wss', '6a685d7b4d7f45a1bf5540e21a08e69c');
+    MQTT.onConnected = () => mdd.value = '连接成功';
+    MQTT.onConnectionLost = (m) => mdd.value = '连接断开 ' + m.errorMessage;
+    MQTT.onMessageArrived = onMessageArrived;//收到消息时
+
+    MQTT.connect({
+        "useSSL": true,
+        "onSuccess": onConnect,//连接确认时
+        "onFailure": () => mdd.value = '连接失败',//连接请求失败或超时
+        "reconnect": true //连接丢失时会尝试重新连接
+    });
+
+    function onConnect() {
+        MQTT.subscribe('clip', {//订阅主题
+            "onSuccess": () => mdd.value = '订阅成功',
+            "onFailure": () => mdd.value = '订阅失败'
+        });
+    }
+
+
+    function onMessageArrived(m) {//收到消息
+        console.log(JSON.parse(m.payloadString))
+        mdd.value = "收到消息：" + JSON.parse(m.payloadString).a;
+    }
+
+
+
+
+
+
+
+
+
+
     map = new AMap.Map("container", {
         zoom: 18,
-        center: [114.023908,22.653854]
+        center: [114.023908, 22.653854]
     });
 
 
