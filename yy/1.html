@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT接收</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+    let doc = document.getElementsByTagName("body")[0];
+    doc.innerHTML += '开始连接...<br>';
+
+    let MQTT = new Paho.Client('bemfa.com', 9504, '/wss', '6a685d7b4d7f45a1bf5540e21a08e69c');
+    MQTT.onConnected = () => doc.innerHTML += '连接成功<br>';
+    MQTT.onConnectionLost = (m) => doc.innerHTML += '连接断开 ' + m.errorMessage + '<br>';
+    MQTT.onMessageArrived = onMessageArrived;//收到消息时
+
+    MQTT.connect({
+        "useSSL": true,
+        "onSuccess": onConnect,//连接确认时
+        "onFailure": () => doc.innerHTML += '连接失败<br>',//连接请求失败或超时
+        "reconnect": true //连接丢失时会尝试重新连接
+    });
+
+    function onConnect() {
+        console.log(MQTT.host)
+        console.log(MQTT.port)
+        console.log(MQTT.path)
+        console.log(MQTT.clientId)
+        MQTT.subscribe('clip', {//订阅主题
+            "onSuccess": () => doc.innerHTML += '订阅成功<br>',
+            "onFailure": () => doc.innerHTML += '订阅失败<br>'
+        });
+    }
+
+
+    function onMessageArrived(m) {//收到消息
+        doc.innerHTML += "收到消息：" + m.payloadString + '<br>';
+    }
+
+</script>
+
+</html>
