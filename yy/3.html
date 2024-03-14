@@ -42,26 +42,28 @@
 </body>
 <script>
     // let mdd = document.getElementById("mdd");
-    let map;
-    let myico;
+    let map;//主地图
+    let car;//小车图标
+    let myico;//用户定位图标
 
     let MQTT = new Paho.Client('bemfa.com', 9504, '/wss', '6a685d7b4d7f45a1bf5540e21a08e69c');
     MQTT.onConnected = () => mdd.value += '连接成功';
-    MQTT.onConnectionLost = (m) => mdd.value = '连接断开 ' + m.errorMessage;
+    MQTT.onConnectionLost = (m) => mdd.value += '连接断开 ' + m.errorMessage;
     MQTT.onMessageArrived = onMessageArrived;//收到消息时
     MQTT.connect({
         "useSSL": true,
         "onSuccess": () => {//连接确认时
-            MQTT.subscribe('ren', {//订阅主题
-                "onSuccess": () => mdd.value += '订阅ren成功',
-                "onFailure": () => mdd.value = '订阅失败'
-            });
+            mdd.value += '连接确认';
             MQTT.subscribe('car', {//订阅主题
                 "onSuccess": () => mdd.value += '订阅car成功',
-                "onFailure": () => mdd.value = '订阅失败'
+                "onFailure": () => mdd.value += '订阅car失败'
+            });
+            MQTT.subscribe('ren', {//订阅主题
+                "onSuccess": () => mdd.value += '订阅ren成功',
+                "onFailure": () => mdd.value += '订阅ren失败'
             });
         },
-        "onFailure": () => mdd.value = '连接失败',//连接请求失败或超时
+        "onFailure": () => mdd.value += '连接失败',//连接请求失败或超时
         "reconnect": true //连接丢失时会尝试重新连接
     });
 
@@ -70,13 +72,15 @@
     function onMessageArrived(m) {//收到消息
         console.log(m.topic);
         console.log(JSON.parse(m.payloadString));
+        mdd.value = "收到消息：" + JSON.parse(m.payloadString).a;
         if (m.topic === 'car') {//收到车辆位置
 
+            car.moveTo(JSON.parse(m.payloadString).a, {
+                duration: 500,
+            });
         } else {//收到人员位置
 
         }
-        mdd.value = "收到消息：" + JSON.parse(m.payloadString).a;
-
 
         // let message = new Paho.Message("Hello");
         // message.destinationName = "ren";
@@ -85,8 +89,10 @@
     }
 
 
-
-
+    map = new AMap.Map("container", {
+                zoom: 18,
+            });
+            KongJian()
 
 
     //首次进入页面，载入最后1个位置
@@ -102,7 +108,7 @@
             });
             //显示小车
             AMap.plugin('AMap.MoveAnimation', function () {
-                marker = new AMap.Marker({
+                car = new AMap.Marker({
                     map: map,
                     position: d.a,
                     icon: "https://27315.app/y/0.png",
@@ -129,6 +135,7 @@
                 offset: [10, 50],//按钮偏移量
                 convert: true,//转高德坐标
                 position: 'RB',//定位按钮的位置
+                needAddress: true,//需要文字地址
                 // zoomToAccuracy:true,//自适应视野
                 showMarker: false,//不显示点标记
                 showCircle: false,//不显示精度范围
@@ -148,9 +155,10 @@
                         duration: 500,
                         autoRotation: false//不旋转
                     });
-                } else {//没有图标
+                } else {//没有图标，只运行1次。
                     console.log('没有图标')
-                    let names = ["宝玉", "曹操", "超人", "妲己", "黛玉", "貂蝉", "段誉", "关羽", "杰瑞", "柯南", "刘备", "路飞", "洛基", "吕布", "麦兜", "玫瑰", "灭霸", "鸣人", "哪吒", "佩琪", "乔治", "沙僧", "孙权", "汤姆", "唐僧", "悟空", "星爵", "虚竹", "杨过", "鹰眼", "张飞", "赵云", "周瑜", "阿童木", "奥特曼", "白素贞", "白云生", "蝙蝠侠", "步惊云", "楚留香", "风清扬", "钢铁侠", "格鲁特", "红太狼", "胡一刀", "花满楼", "花木兰", "花无缺", "灰太狼", "机器猫", "加菲猫", "金刚狼", "蓝精灵", "懒洋洋", "李寻欢", "梁山伯", "林诗音", "令狐冲", "柳余恨", "鲁智深", "绿巨人", "美人鱼", "美羊羊", "米老鼠", "木婉清", "皮卡丘", "皮皮鲁", "秋凤梧", "任我行", "软绵绵", "闪电侠", "沈璧君", "圣斗士", "史努比", "水灵光", "孙悟空", "唐老鸭", "韦小宝", "喜羊羊", "向问天", "萧别离", "小龙女", "小王子", "小燕子", "燕南天", "叶孤城", "原随云", "张无忌", "蜘蛛侠", "诸葛亮", "猪八戒", "祝英台", "超级飞侠", "东方不败", "独孤求败", "独孤一鹤", "哆啦A梦", "火箭浣熊", "蜡笔小新", "雷神托尔", "慕容秋水", "奇异博士", "神奇女侠", "司空摘星", "西门吹雪", "萧十一郎", "飞天小女警", "美少女战士"];
+                    alert(m.formattedAddress)
+                    let names = ["宝玉", "曹操", "超人", "妲己", "黛玉", "貂蝉", "段誉", "关羽", "杰瑞", "柯南", "刘备", "路飞", "洛基", "吕布", "麦兜", "玫瑰", "灭霸", "鸣人", "哪吒", "佩琪", "乔治", "沙僧", "孙权", "汤姆", "唐僧", "悟空", "星爵", "虚竹", "杨过", "鹰眼", "张飞", "赵云", "周瑜", "阿童木", "奥特曼", "白素贞", "白云生", "蝙蝠侠", "步惊云", "楚留香", "风清扬", "钢铁侠", "格鲁特", "红太狼", "胡一刀", "花满楼", "花木兰", "花无缺", "灰太狼", "机器猫", "加菲猫", "金刚狼", "蓝精灵", "懒羊羊", "李寻欢", "梁山伯", "林诗音", "令狐冲", "柳余恨", "鲁智深", "绿巨人", "美人鱼", "美羊羊", "米老鼠", "木婉清", "皮卡丘", "皮皮鲁", "秋凤梧", "任我行", "软绵绵", "闪电侠", "沈璧君", "圣斗士", "史努比", "水灵光", "孙悟空", "唐老鸭", "韦小宝", "喜羊羊", "向问天", "萧别离", "小龙女", "小王子", "小燕子", "燕南天", "叶孤城", "原随云", "张无忌", "蜘蛛侠", "诸葛亮", "猪八戒", "祝英台", "超级飞侠", "东方不败", "独孤求败", "独孤一鹤", "哆啦A梦", "火箭浣熊", "蜡笔小新", "雷神托尔", "慕容秋水", "奇异博士", "神奇女侠", "司空摘星", "西门吹雪", "萧十一郎", "飞天小女警", "美少女战士"];
                     let i = Math.floor(Math.random() * names.length);
                     let myid = names[i];
                     AMap.plugin('AMap.MoveAnimation', function () {
@@ -170,6 +178,12 @@
                         geolocation.getCurrentPosition();//再次定位
                     }, 2000);
                 }
+
+                //定位成功最后发送定
+
+                // msg = new Paho.Message('11');
+                // msg.destinationName = "ren";
+                // MQTT.send(msg);
             })
         })//定位控件结束
 
