@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的位置</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
-    <script
-        src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253&plugin=AMap.Geolocation'></script>
+    <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <style>
         html,
         body,
@@ -51,8 +50,12 @@
     MQTT.connect({
         "useSSL": true,
         "onSuccess": () => {//连接确认时
-            MQTT.subscribe('clip', {//订阅主题
-                "onSuccess": () => mdd.value += '订阅成功',
+            MQTT.subscribe('ren', {//订阅主题
+                "onSuccess": () => mdd.value += '订阅ren成功',
+                "onFailure": () => mdd.value = '订阅失败'
+            });
+            MQTT.subscribe('car', {//订阅主题
+                "onSuccess": () => mdd.value += '订阅car成功',
                 "onFailure": () => mdd.value = '订阅失败'
             });
         },
@@ -63,8 +66,20 @@
 
 
     function onMessageArrived(m) {//收到消息
-        console.log(JSON.parse(m.payloadString))
+        console.log(m.topic);
+        console.log(JSON.parse(m.payloadString));
+        if (m.topic === 'car') {//收到车辆位置
+
+        } else {//收到人员位置
+
+        }
         mdd.value = "收到消息：" + JSON.parse(m.payloadString).a;
+
+
+        // let message = new Paho.Message("Hello");
+        // message.destinationName = "ren";
+        // console.log(message);
+        // MQTT.send(message);
     }
 
 
@@ -72,9 +87,8 @@
 
 
 
-
-
-    fetch('https://apis.bemfa.com/va/getmsg?uid=6a685d7b4d7f45a1bf5540e21a08e69c&topic=clip&type=1')
+    //首次进入页面，载入最后1个位置
+    fetch('https://apis.bemfa.com/va/getmsg?uid=6a685d7b4d7f45a1bf5540e21a08e69c&topic=car&type=1')
         .then(res => res.json())
         .then(res => {
             d = JSON.parse(res.data[0].msg)
@@ -106,19 +120,19 @@
                 "offset": [10, 50]
             }));
         });
+        //放大缩小控件结束
         //定位控件
         AMap.plugin("AMap.Geolocation", function () {
             geolocation = new AMap.Geolocation({
-                offset: [10, 50],  // 按钮偏移量
-                convert: true, //转高德坐标
-                position: 'RB', //  定位按钮的排放位置,  RB表示右下
+                offset: [10, 50],//按钮偏移量
+                convert: true,//转高德坐标
+                position: 'RB',//定位按钮的位置
                 enableHighAccuracy: true //高精度定位
             })
             //显示定位按钮
-            map.addControl(geolocation)
+            map.addControl(geolocation);
             //定位成功时
             geolocation.on('complete', function (m) {
-                alert('高德坐标'+m.isConverted)
                 new AMap.Marker({
                     map: map,
                     position: m.position,
@@ -127,10 +141,9 @@
                         direction: top
                     }
                 })
-                map.setFitView();
+                map.setFitView();//自适应显示全部
             })
-            //定位结束
-        })
+        })//定位控件结束
 
 
     }
