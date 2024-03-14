@@ -37,7 +37,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本10" id="shijian">
+    <input type="button" value="版本11" id="shijian">
 
 </body>
 <script>
@@ -133,15 +133,20 @@
             map.addControl(geolocation);
             //定位成功时
             geolocation.on('complete', function (m) {
+
                 new AMap.Marker({
                     map: map,
                     position: m.position,
                     label: {
-                        content: '我的位置',
+                        content: '我的位置' + Math.random(),
                         direction: top
                     }
                 })
                 map.setFitView();//自适应显示全部
+
+                setInterval(() => {
+                    geolocation.getCurrentPosition();//再次定位
+                }, 2000);
             })
         })//定位控件结束
 
