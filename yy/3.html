@@ -37,7 +37,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本14" id="shijian">
+    <input type="button" value="版本15" id="shijian">
 
 </body>
 <script>
@@ -129,6 +129,9 @@
                 offset: [10, 50],//按钮偏移量
                 convert: true,//转高德坐标
                 position: 'RB',//定位按钮的位置
+                // zoomToAccuracy:true,//自适应视野
+                showMarker: false,//不显示点标记
+                showCircle: false,//不显示精度范围
                 panToLocation: false,//定位成功后不要作为地图中心点
                 enableHighAccuracy: true //高精度定位
             })
@@ -163,7 +166,7 @@
                     map.setFitView();//自适应显示全部
                     setInterval(() => {
                         geolocation.getCurrentPosition();//再次定位
-                    }, 5000);
+                    }, 2000);
                 }
             })
         })//定位控件结束
