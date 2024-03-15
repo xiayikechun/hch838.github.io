@@ -37,7 +37,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
-    <input type="button" value="版本18" id="shijian">
+    <input type="button" value="版本19" id="shijian">
 
 </body>
 <script>
@@ -144,6 +144,7 @@
             })
             //显示定位按钮
             map.addControl(geolocation);
+            geolocation.getCurrentPosition();
             //定位成功时
             geolocation.on('complete', function (m) {
 
@@ -173,10 +174,10 @@
                             }
                         })
                     })
-                    map.setFitView();//自适应显示全部
-                    setInterval(() => {
-                        geolocation.getCurrentPosition();//再次定位
-                    }, 2000);
+                    // map.setFitView();//自适应显示全部
+                    // setInterval(() => {
+                    //     geolocation.getCurrentPosition();//再次定位
+                    // }, 2000);
                 }
 
                 //定位成功最后发送定
