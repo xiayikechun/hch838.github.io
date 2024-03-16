@@ -9,14 +9,12 @@
 </head>
 
 <body>
-
+D2
 </body>
 
 <script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
 <script>
-    var fpPromise = FingerprintJS.load()
-
-    fpPromise
+    FingerprintJS.load()
         .then(fp => fp.get())
         .then(result => alert(result.visitorId))
 </script>
