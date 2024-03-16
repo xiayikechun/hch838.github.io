@@ -40,7 +40,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd">
-    <input type="button" value="版本4" id="shijian">
+    <input type="button" value="版本5" id="shijian">
 
 </body>
 <script>
@@ -192,7 +192,9 @@
                             }
                         })
                     })
-                    // map.setFitView();//自适应显示全部
+                    setTimeout(() => {
+                        map.setFitView();//自适应显示全部
+                    }, 1000);
                     setInterval(() => {
                         geolocation.getCurrentPosition();//再次定位
                     }, 6000);
