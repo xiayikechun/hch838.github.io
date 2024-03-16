@@ -8,7 +8,7 @@
     <title>位置共享</title>
     <script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
     <!-- <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script> -->
-    <script src='https://webapi.amap.com/maps?v=2.0&key=608d75903d29ad471362f8c58c550daf'></script>
+    <script src='https://webapi.amap.com/maps?v=2.0&key=c2d8624cfd8ff1058ab6e3ea23d9a779'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
@@ -40,7 +40,7 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd">
-    <input type="button" value="版本3" id="shijian">
+    <input type="button" value="版本4" id="shijian">
 
 </body>
 <script>
@@ -112,7 +112,7 @@
 
     //显示地图
     map = new AMap.Map("container", {
-        zoom: 15
+        zoom: 10
     });
     //显示小车
     // AMap.plugin('AMap.MoveAnimation', function () {
@@ -192,7 +192,7 @@
                             }
                         })
                     })
-                    map.setFitView();//自适应显示全部
+                    // map.setFitView();//自适应显示全部
                     setInterval(() => {
                         geolocation.getCurrentPosition();//再次定位
                     }, 6000);
