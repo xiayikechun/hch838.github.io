@@ -34,6 +34,22 @@
             width: 100%;
             z-index: 200;
         }
+
+        #but_c {
+            position: absolute;
+            top: 5%;
+            right: 0;
+            /* width: 100%; */
+            z-index: 200;
+        }
+
+        #but_d {
+            position: absolute;
+            top: 10%;
+            right: 0;
+            /* width: 100%; */
+            z-index: 200;
+        }
     </style>
 </head>
 
@@ -41,12 +57,16 @@
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd">
     <input type="button" value="版本6" id="shijian">
+    <input type="button" value="看全部" id="but_c" onclick=but_c()>
+    <input type="button" value="看自己" id="but_d" onclick=but_d()>
+
 
 </body>
 <script>
     // let mdd = document.getElementById("mdd");
     let map;//主地图
     let myico;//用户定位图标
+    let mypos;//用户定位坐标
     let users = {};//用户们
     let myname;//用户艺名
     let key = '24678';//AES加密密钥
@@ -194,14 +214,15 @@
                     // console.log('已有图标')
                     // console.log(m)
                     //移动自己的图标
-                    myico.moveTo([m.position.lng, m.position.lat], {
+                    mypos = [m.position.lng, m.position.lat];
+                    myico.moveTo(mypos, {
                         duration: 500,
                         autoRotation: false//不旋转
                     });
                     //发送自己的位置
                     // console.log('发送位置1');
                     Send(JSON.stringify({
-                        a: [m.position.lng, m.position.lat],
+                        a: mypos,
                         n: myname,
                         id: myid
                     }))
@@ -239,7 +260,13 @@
 
     }
 
+    function but_c() {
+        map.setFitView();//自适应显示全部
+    }
 
+    function but_d() {
+        map.setCenter(mypos);//显示自己的位置为中心
+    }
 
     function Send(msg) {
         // console.log('发送位置2');
