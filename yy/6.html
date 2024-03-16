@@ -40,13 +40,14 @@
 <body>
     <div id='container'>加载中...</div>
     <input type="button" value="开始连接..." id="mdd">
-    <input type="button" value="版本5" id="shijian">
+    <input type="button" value="版本6" id="shijian">
 
 </body>
 <script>
     // let mdd = document.getElementById("mdd");
     let map;//主地图
     let myico;//用户定位图标
+    let users = {};//用户们
     let myname;//用户艺名
     let key = '24678';//AES加密密钥
     let MQTT, userName = '', password = '';
@@ -94,17 +95,49 @@
 
 
 
-    function onMessageArrived(m) {//收到消息
-        // console.log(m.topic);
+    function onMessageArrived(data) {//收到消息
+        msg = CryptoJS.AES.decrypt(data.payloadString, key).toString(CryptoJS.enc.Utf8);//解密
+        msg = JSON.parse(msg);
+
+        console.log(msg);
+        if (msg.id !== myid) {
+            // console.log('1' + users[msg.id]);
+            // console.log('2'+users[msg.id].ico);
+            if (users[msg.id] == undefined) {//新增图标
+                console.log('新增图标');
+                users[msg.id] = {};
+                AMap.plugin('AMap.MoveAnimation', function () {
+                    users[msg.id].ico = new AMap.Marker({
+                        map: map,
+                        position: msg.a,
+                        label: {
+                            content: msg.n,
+                            direction: top
+                        }
+                    })
+                })
+            } else {//移动图标
+                console.log('移动图标');
+                users[msg.id].ico.setLabel({
+                    content: msg.n
+                });
+                users[msg.id].ico.moveTo(msg.a, {
+                    duration: 500,
+                    autoRotation: false//不旋转
+                });
+            }
+        } else {
+            console.log('自己id');
+        }
         // console.log(JSON.parse(m.payloadString));
         // mdd.value = "收到消息：" + JSON.parse(m.payloadString).a;
-        if (m.topic === 'car') {//收到车辆位置
-            car.moveTo(JSON.parse(m.payloadString).a, {
-                duration: 500,
-            });
-        } else {//收到人员位置
+        // if (m.topic === 'car') {//收到车辆位置
+        //     car.moveTo(JSON.parse(m.payloadString).a, {
+        //         duration: 500,
+        //     });
+        // } else {//收到人员位置
 
-        }
+        // }
 
     }
 
@@ -158,7 +191,7 @@
             geolocation.on('complete', function (m) {
 
                 if (myico) {//已有图标
-                    console.log('已有图标')
+                    // console.log('已有图标')
                     // console.log(m)
                     //移动自己的图标
                     myico.moveTo([m.position.lng, m.position.lat], {
@@ -166,7 +199,7 @@
                         autoRotation: false//不旋转
                     });
                     //发送自己的位置
-                    console.log('发送位置1');
+                    // console.log('发送位置1');
                     Send(JSON.stringify({
                         a: [m.position.lng, m.position.lat],
                         n: myname,
@@ -209,9 +242,9 @@
 
 
     function Send(msg) {
-        console.log('发送位置2');
+        // console.log('发送位置2');
         msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
-        MQTT.send('ren', msg, 1, true);
+        MQTT.send('ren', msg, 1);
     }
 
 </script>
