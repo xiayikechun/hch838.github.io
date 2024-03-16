@@ -52,8 +52,8 @@
     let time = Date.now();
     let clientid = Date.now().toString(36);
 
-    MQTT = new Paho.Client('ws://broker.emqx.io:8083/mqtt', clientid);//美国1000
-    // MQTT = new Paho.Client('wss://broker.emqx.io:8084/mqtt', clientid);//1200
+    // MQTT = new Paho.Client('ws://broker.emqx.io:8083/mqtt', clientid);//美国1000
+    MQTT = new Paho.Client('wss://broker.emqx.io:8084/mqtt', clientid);//1200
 
     // MQTT = new Paho.Client('ws://mqtt.eclipseprojects.io/mqtt', clientid);//美国1200
     // MQTT = new Paho.Client('wss://mqtt.eclipseprojects.io/mqtt', clientid);//1200
