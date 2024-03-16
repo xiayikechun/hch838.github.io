@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>位置共享</title>
+    <script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
@@ -44,14 +45,24 @@
 <script>
     // let mdd = document.getElementById("mdd");
     let map;//主地图
-    let car;//小车图标
     let myico;//用户定位图标
-    let myname;//用户花名
-
+    let myname;//用户艺名
     let key = '24678';//AES加密密钥
     let MQTT, userName = '', password = '';
+    let clientid = Date.now().toString(36);//MQTTid
+    let myid = clientid;//用户稳定id
+    console.log('clientid：' + clientid);
     let time = Date.now();
-    let clientid = Date.now().toString(36);//用户id
+
+    //生成稳定id
+    FingerprintJS.load()
+        .then(fp => fp.get())
+        .then(result => {
+            myid = result.visitorId;
+            console.log('myid：' + myid);
+        })
+
+
 
     // MQTT = new Paho.Client('ws://broker.emqx.io:8083/mqtt', clientid);//美国1000
     MQTT = new Paho.Client('wss://broker.emqx.io:8084/mqtt', clientid);//1200
@@ -132,7 +143,7 @@
                 convert: true,//转高德坐标
                 position: 'RB',//定位按钮的位置
                 useNative: true,//使用安卓定位sdk
-                needAddress: true,//需要文字地址
+                // needAddress: true,//需要文字地址
                 // zoomToAccuracy:true,//自适应视野
                 showMarker: false,//不显示点标记
                 showCircle: false,//不显示精度范围
@@ -154,10 +165,11 @@
                         autoRotation: false//不旋转
                     });
                     //发送自己的位置
+                    console.log('发送位置1');
                     Send(JSON.stringify({
                         a: [m.position.lng, m.position.lat],
                         n: myname,
-                        id: clientid
+                        id: myid
                     }))
 
 
@@ -182,7 +194,7 @@
                     map.setFitView();//自适应显示全部
                     setInterval(() => {
                         geolocation.getCurrentPosition();//再次定位
-                    }, 2000);
+                    }, 6000);
                 }
 
             })
@@ -194,25 +206,13 @@
 
 
     function Send(msg) {
+        console.log('发送位置2');
         msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
         MQTT.send('ren', msg, 1, true);
     }
 
 </script>
 
-
-
-<!-- Note that we use iife.min.js -->
-<script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
-<script>
-  // Initialize the agent at application startup.
-  var fpPromise = FingerprintJS.load()
-
-  // Analyze the visitor when necessary.
-  fpPromise
-    .then(fp => fp.get())
-    .then(result => alert(result.visitorId))
-</script>
 
 
 
