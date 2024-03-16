@@ -37,7 +37,7 @@
 
 <body>
     <div id='container'>加载中...</div>
-    <input type="button" value="开始连接..." id="mdd" onclick="Chongxinguihua()">
+    <input type="button" value="开始连接..." id="mdd">
     <input type="button" value="版本1" id="shijian">
 
 </body>
@@ -46,11 +46,12 @@
     let map;//主地图
     let car;//小车图标
     let myico;//用户定位图标
+    let myname;//用户花名
 
     let key = '24678';//AES加密密钥
     let MQTT, userName = '', password = '';
     let time = Date.now();
-    let clientid = Date.now().toString(36);
+    let clientid = Date.now().toString(36);//用户id
 
     // MQTT = new Paho.Client('ws://broker.emqx.io:8083/mqtt', clientid);//美国1000
     MQTT = new Paho.Client('wss://broker.emqx.io:8084/mqtt', clientid);//1200
@@ -146,18 +147,26 @@
 
                 if (myico) {//已有图标
                     console.log('已有图标')
-                    console.log(m)
-
+                    // console.log(m)
+                    //移动自己的图标
                     myico.moveTo([m.position.lng, m.position.lat], {
                         duration: 500,
                         autoRotation: false//不旋转
                     });
+                    //发送自己的位置
+                    Send(JSON.stringify({
+                        a: [m.position.lng, m.position.lat],
+                        n: myname,
+                        id: clientid
+                    }))
+
+
                 } else {//没有图标，只运行1次。
                     console.log('没有图标')
-                    mdd.value = m.formattedAddress;//显示自己的文字地址
+                    mdd.value += m.formattedAddress;//显示自己的文字地址
                     let names = ["宝玉", "曹操", "超人", "妲己", "黛玉", "貂蝉", "段誉", "关羽", "杰瑞", "柯南", "刘备", "路飞", "洛基", "吕布", "麦兜", "玫瑰", "灭霸", "鸣人", "哪吒", "佩琪", "乔治", "沙僧", "孙权", "汤姆", "唐僧", "悟空", "星爵", "虚竹", "杨过", "鹰眼", "张飞", "赵云", "周瑜", "阿童木", "奥特曼", "白素贞", "白云生", "蝙蝠侠", "步惊云", "楚留香", "风清扬", "钢铁侠", "格鲁特", "红太狼", "胡一刀", "花满楼", "花木兰", "花无缺", "灰太狼", "机器猫", "加菲猫", "金刚狼", "蓝精灵", "懒羊羊", "李寻欢", "梁山伯", "林诗音", "令狐冲", "柳余恨", "鲁智深", "绿巨人", "美人鱼", "美羊羊", "米老鼠", "木婉清", "皮卡丘", "皮皮鲁", "秋凤梧", "任我行", "软绵绵", "闪电侠", "沈璧君", "圣斗士", "史努比", "水灵光", "孙悟空", "唐老鸭", "韦小宝", "喜羊羊", "向问天", "萧别离", "小龙女", "小王子", "小燕子", "燕南天", "叶孤城", "原随云", "张无忌", "蜘蛛侠", "诸葛亮", "猪八戒", "祝英台", "超级飞侠", "东方不败", "独孤求败", "独孤一鹤", "哆啦A梦", "火箭浣熊", "蜡笔小新", "雷神托尔", "慕容秋水", "奇异博士", "神奇女侠", "司空摘星", "西门吹雪", "萧十一郎", "飞天小女警", "美少女战士"];
                     let i = Math.floor(Math.random() * names.length);
-                    let myid = names[i];
+                    myname = names[i];
                     AMap.plugin('AMap.MoveAnimation', function () {
                         myico = new AMap.Marker({
                             map: map,
@@ -165,7 +174,7 @@
                             offset: [-18, -36],
                             content: '<img src="https://a.amap.com/jsapi_demos/static/resource/img/user.png" style="width:36px">',
                             label: {
-                                content: myid,
+                                content: myname,
                                 direction: top
                             }
                         })
@@ -181,6 +190,30 @@
 
 
     }
+
+
+
+    function Send(msg) {
+        msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
+        MQTT.send('ren', msg, 1, true);
+    }
+
 </script>
+
+
+
+<!-- Note that we use iife.min.js -->
+<script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
+<script>
+  // Initialize the agent at application startup.
+  var fpPromise = FingerprintJS.load()
+
+  // Analyze the visitor when necessary.
+  fpPromise
+    .then(fp => fp.get())
+    .then(result => alert(result.visitorId))
+</script>
+
+
 
 </html>
