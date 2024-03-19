@@ -18,22 +18,16 @@
 <script>
     let doc = document.getElementsByTagName("body")[0];
 
-
-    doc.innerHTML = navigator.userAgent;
-
-
-
-
-
-
     // if (typeof FingerprintJS === 'undefined') {
 
-    let canvas = document.createElement('canvas');
-    let ctx = canvas.getContext('2d');
+    canvas = document.createElement('canvas');
+    ctx = canvas.getContext('2d');
     ctx.fillStyle = '#fff';
-    ctx.fillText('https://blog.csdn.net/h137242126', 0, 10);
-    console.log('Cid：' + CryptoJS.MD5(canvas.toDataURL('image/jpeg')).toString());
-    doc.innerHTML += '<br>Cid：' + CryptoJS.MD5(canvas.toDataURL('image/jpeg')).toString();
+    ctx.fillText(CryptoJS.MD5(navigator.userAgent), 0, 10);
+    // console.log(canvas.toDataURL('image/jpeg'))
+    cid = CryptoJS.MD5(canvas.toDataURL('image/jpeg')).toString();
+    console.log('Cid：' + cid);
+    doc.innerHTML += '<br>Cid：' + cid;
     // } else {
 
     FingerprintJS.load()
