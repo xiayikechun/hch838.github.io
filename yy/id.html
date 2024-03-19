@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>稳定id</title>
+    <script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+
+</head>
+
+<body>
+
+</body>
+<script>
+    let doc = document.getElementsByTagName("body")[0];
+
+    // if (typeof FingerprintJS === 'undefined') {
+
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillText('https://blog.csdn.net/h137242126', 0, 10);
+    console.log('Cid：' + CryptoJS.MD5(canvas.toDataURL('image/jpeg')).toString());
+    doc.innerHTML = 'Cid：' + CryptoJS.MD5(canvas.toDataURL('image/jpeg')).toString();
+    // } else {
+
+    FingerprintJS.load()
+        .then(fp => fp.get())
+        .then(result => {
+            myid = result.visitorId;
+            console.log('Fid：' + myid);
+            doc.innerHTML += '<br>Fid：' + myid;
+        })
+
+    // }
+</script>
+
+</html>
