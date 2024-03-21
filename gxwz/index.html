@@ -137,11 +137,16 @@
             } else {//非首次
                 if (msg.a === 'over') {//离线了
                     Renshu(-1);
+                    users[msg.id].a = 'over';//记录下离线
                     users[msg.id].ico.setLabel({
                         content: msg.n + ' ' + ttt + '【离线】'
                     });
                 } else {
                     console.log('移动图标');
+                    if (users[msg.id].a === 'over') {//是否离线
+                        Renshu(1);
+                        users[msg.id].a = '';
+                    }
                     users[msg.id].ico.setLabel({
                         content: msg.n + ' ' + ttt
                     });
