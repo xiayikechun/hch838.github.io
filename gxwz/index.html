@@ -61,7 +61,6 @@
 </body>
 <script>
     let MQTT,
-        time = Date.now(),//测试连接速度
         cid = Getid(),//稳定id
         par = location.search ? JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}') : {},
         fwq = par.fwq ? par.fwq : 1,//服务器序号
@@ -84,15 +83,11 @@
         willMessage = new Paho.Message(CryptoJS.AES.encrypt(JSON.stringify({ a: 'over', id: cid }), key).toString());
     willMessage.destinationName = topic;
 
-
     let mdd = document.getElementById("but_a");
     let map;//主地图
     let myico;//用户定位图标
     let mypos;//用户定位坐标
     let users = {};//用户们
-
-
-
 
     MQTT = new Paho.Client(url, clientid);
     MQTT.onConnected = () => mdd.value += '连接成功：' + MQTT.host;
@@ -106,8 +101,7 @@
         reconnect: true, //连接丢失时尝试重新连接
         onFailure: () => mdd.value += '连接失败',//连接请求失败或超时
         onSuccess: () => {//连接确认时
-            mdd.value += '连接确认' + (Date.now() - time);
-            time = Date.now();
+            mdd.value += '连接确认';
             MQTT.subscribe(topic, {//订阅主题
                 qos: 1,
                 onSuccess: () => mdd.value += '订阅' + topic + '成功',
@@ -123,7 +117,7 @@
         console.log(msg);
         if (msg.id !== cid) {
             if (users[msg.id] == undefined) {//新增图标
-                console.log('新增图标');
+                console.log('新增别人图标');
                 users[msg.id] = {};
                 AMap.plugin('AMap.MoveAnimation', function () {
                     users[msg.id].ico = new AMap.Marker({
@@ -221,7 +215,7 @@
 
 
                 } else {//没有图标，只运行1次。
-                    console.log('没有图标')
+                    console.log('新增自己图标')
                     // mdd.value += m.formattedAddress;//显示自己的文字地址
                     AMap.plugin('AMap.MoveAnimation', function () {
                         myico = new AMap.Marker({
@@ -232,13 +226,15 @@
                             label: {
                                 content: name,
                                 direction: 'right',
-                                offset: [0, -26]
+                                offset: [0, -24]
                             }
                         })
                     })
+
                     setTimeout(() => {
                         map.setFitView();//自适应显示全部
                     }, 1000);
+
                     setInterval(() => {
                         geolocation.getCurrentPosition();//再次定位
                     }, 6000);
