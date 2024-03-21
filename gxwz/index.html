@@ -80,7 +80,7 @@
             'wss://bemfa.com:9504/wss'//巴法云广州30
         ],//服务器列表
         url = par.url ? par.url : fwqarr[fwq],//服务器
-        willMessage = new Paho.Message(CryptoJS.AES.encrypt(JSON.stringify({ a: 'over', id: cid }), key).toString());
+        willMessage = new Paho.Message(CryptoJS.AES.encrypt(JSON.stringify({ a: 'over', n: name, id: cid }), key).toString());
     willMessage.destinationName = topic;
 
     let mdd = document.getElementById("but_a");
@@ -90,8 +90,8 @@
     let users = {};//用户们
 
     MQTT = new Paho.Client(url, clientid);
-    MQTT.onConnected = () => mdd.value += '连接成功：' + MQTT.host;
-    MQTT.onConnectionLost = (m) => mdd.value += '连接断开：' + m.errorMessage;
+    MQTT.onConnected = () => mdd.value = '连接成功：' + MQTT.host;
+    MQTT.onConnectionLost = (m) => mdd.value = '连接断开：' + m.errorMessage;
     MQTT.onMessageArrived = onMessageArrived;//收到消息时
     MQTT.connect({
         userName: userName,
@@ -99,13 +99,13 @@
         willMessage: willMessage,
         keepAliveInterval: 4,
         reconnect: true, //连接丢失时尝试重新连接
-        onFailure: () => mdd.value += '连接失败',//连接请求失败或超时
+        onFailure: () => mdd.value = '连接失败',//连接请求失败或超时
         onSuccess: () => {//连接确认时
-            mdd.value += '连接确认';
+            mdd.value = '连接确认';
             MQTT.subscribe(topic, {//订阅主题
                 qos: 1,
-                onSuccess: () => mdd.value += '订阅' + topic + '成功',
-                onFailure: () => mdd.value += '订阅' + topic + '失败'
+                onSuccess: () => mdd.value = '订阅' + topic + '成功',
+                onFailure: () => mdd.value = '订阅' + topic + '失败'
             });
         }
     });
@@ -116,7 +116,9 @@
         msg = JSON.parse(msg);
         console.log(msg);
         if (msg.id !== cid) {
-            if (users[msg.id] == undefined) {//新增图标
+            ttt = new Date().toLocaleTimeString();//时分秒
+            mdd.value = ttt + '：' + msg.n + '发来位置';
+            if (users[msg.id] == undefined) {//首次新增图标
                 console.log('新增别人图标');
                 users[msg.id] = {};
                 AMap.plugin('AMap.MoveAnimation', function () {
@@ -124,21 +126,27 @@
                         map: map,
                         position: msg.a,
                         label: {
-                            content: msg.n,
+                            content: msg.n + ' ' + ttt,
                             direction: 'right',
                             offset: [0, -24]
                         }
                     })
                 })
-            } else {//移动图标
-                console.log('移动图标');
-                users[msg.id].ico.setLabel({
-                    content: msg.n
-                });
-                users[msg.id].ico.moveTo(msg.a, {
-                    duration: 500,
-                    autoRotation: false//不旋转
-                });
+            } else {//非首次
+                if (msg.a === 'over') {//离线了
+                    users[msg.id].ico.setLabel({
+                        content: msg.n + ' ' + ttt + '【离线】'
+                    });
+                } else {
+                    console.log('移动图标');
+                    users[msg.id].ico.setLabel({
+                        content: msg.n + ' ' + ttt
+                    });
+                    users[msg.id].ico.moveTo(msg.a, {
+                        duration: 500,
+                        autoRotation: false//不旋转
+                    });
+                }
             }
         } else {
             console.log('是自己消息');
@@ -216,7 +224,7 @@
 
                 } else {//没有图标，只运行1次。
                     console.log('新增自己图标')
-                    // mdd.value += m.formattedAddress;//显示自己的文字地址
+                    // mdd.value = m.formattedAddress;//显示自己的文字地址
                     AMap.plugin('AMap.MoveAnimation', function () {
                         myico = new AMap.Marker({
                             map: map,
