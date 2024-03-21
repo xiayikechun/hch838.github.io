@@ -132,7 +132,9 @@
                             direction: 'right',
                             offset: [0, -24]
                         }
-                    })
+                    });
+                    users[msg.id].ico.on('click', Click);
+                    but_c();
                 })
             } else {//非首次
                 if (msg.a === 'over') {//离线了
@@ -242,9 +244,10 @@
                             label: {
                                 content: name,
                                 direction: 'right',
-                                offset: [0, -24]
+                                offset: [0, -26]
                             }
                         })
+                        myico.on('click', Click);
                     })
 
                     setTimeout(() => {
@@ -299,9 +302,12 @@
     let renshu = 0;
     function Renshu(i) {
         if (i === 1) {
-            renshu++
+            renshu++;
         } else {
-            renshu--
+            renshu--;
+            if (renshu < 1) {
+                renshu = 1;
+            }
         }
         if (renshu === 1) {
             but_b.value = '当前 ' + renshu + ' 人在线（自己）';
@@ -310,6 +316,14 @@
         }
     }
     Renshu(1);
+
+
+    function Click(p) {
+        map.setCenter(p.target._position);
+        setTimeout(() => {
+            map.setZoom(18);
+        }, 800);
+    }
 </script>
 
 </html>
