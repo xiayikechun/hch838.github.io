@@ -303,7 +303,11 @@
         } else {
             renshu--
         }
-        but_b.value = renshu;
+        if (renshu === 1) {
+            but_b.value = '当前 ' + renshu + ' 人在线（自己）';
+        } else {
+            but_b.value = '当前 ' + renshu + ' 人在线';
+        }
     }
     Renshu(1);
 </script>
