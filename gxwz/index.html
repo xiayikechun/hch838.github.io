@@ -64,7 +64,7 @@
         cid = Getid(),//稳定id
         par = location.search ? JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}') : {},
         fwq = par.fwq ? par.fwq : 1,//服务器序号
-        key = par.key ? par.key : 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaikuaiLaiShuYiShu24678',//AES加密密钥
+        key = par.key ? par.key : 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaiKuaiLaiShuYiShu24678',//AES加密密钥
         name = par.name ? decodeURI(par.name) : Name(),//自己的名字
         topic = par.topic ? par.topic : 'topic27315',//订阅和发送的主题
         userName = par.username ? par.username : '',//账号
@@ -113,6 +113,7 @@
 
     function onMessageArrived(data) {//收到消息
         msg = CryptoJS.AES.decrypt(data.payloadString, key).toString(CryptoJS.enc.Utf8);//解密
+        console.log(msg);
         msg = JSON.parse(msg);
         console.log(msg);
         if (msg.id !== cid) {
@@ -120,6 +121,7 @@
             mdd.value = ttt + '：' + msg.n + '发来位置';
             if (users[msg.id] == undefined) {//首次新增图标
                 console.log('新增别人图标');
+                Renshu(1);
                 users[msg.id] = {};
                 AMap.plugin('AMap.MoveAnimation', function () {
                     users[msg.id].ico = new AMap.Marker({
@@ -134,6 +136,7 @@
                 })
             } else {//非首次
                 if (msg.a === 'over') {//离线了
+                    Renshu(-1);
                     users[msg.id].ico.setLabel({
                         content: msg.n + ' ' + ttt + '【离线】'
                     });
@@ -287,9 +290,17 @@
     // setTimeout(() => {
     //     MQTT.send(topic, '', 1, true);//去除保留消息
     // }, 3000);
+
+    let renshu = 0;
+    function Renshu(i) {
+        if (i === 1) {
+            renshu += renshu
+        } else {
+            renshu -= renshu
+        }
+        but_b.value = i;
+    }
+    Renshu(1);
 </script>
-
-
-
 
 </html>
