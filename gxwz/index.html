@@ -294,11 +294,11 @@
     let renshu = 0;
     function Renshu(i) {
         if (i === 1) {
-            renshu += renshu
+            renshu++
         } else {
-            renshu -= renshu
+            renshu--
         }
-        but_b.value = i;
+        but_b.value = renshu;
     }
     Renshu(1);
 </script>
