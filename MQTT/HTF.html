@@ -76,7 +76,7 @@
             par = location.search ? JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}') : {},
             fwq = par.fwq ? par.fwq : 0,//服务器序号
             key = par.key ? par.key : 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaikuaiLaiShuYiShu24678',//AES加密密钥
-            topic = par.topic ? par.topic.replaceAll('%', '') : 'HongTianFuGongYeYuan',//订阅和发送的主题
+            topic = par.topic ? par.topic.replaceAll('%', '') : '666',//订阅和发送的主题
             clientid = Date.now().toString(36),//客户端id
             fwqarr = [
                 'wss://test.mosquitto.org:8081/mqtt',   //0法国1800，保留消息久
