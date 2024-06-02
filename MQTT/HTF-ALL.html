@@ -73,7 +73,6 @@
             par = location.search ? JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}') : {},
             fwq = par.fwq ? par.fwq : 0,//服务器序号
             key = par.key ? par.key : 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaikuaiLaiShuYiShu24678',//AES加密密钥
-            // topic = par.topic ? par.topic : 'HongTianFuGongYeYuan',//订阅和发送的主题
             clientid = Date.now().toString(36),//客户端id
             fwqarr = [
                 'wss://test.mosquitto.org:8081/mqtt',   //0法国1800，保留消息久
@@ -100,16 +99,6 @@
 
             document.body.appendChild(document.createElement('hr'))
             document.body.appendChild(document.createElement('hr'))
-
-            // idd = document.getElementById(i)
-            // console.log(idd)
-            // li = document.createElement('li');
-            // li.textContent = i;
-            // idd.appendChild(li);
-            // li1 = document.createElement('li');
-            // li1.textContent = i;
-            // idd.appendChild(li1);
-
         }
 
 
