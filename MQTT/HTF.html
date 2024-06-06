@@ -68,8 +68,6 @@
     <ul id="myList">
     </ul>
     <script>
-
-
         let MQTT,
             arr = [],
             time = Date.now(),
@@ -86,6 +84,8 @@
                 'wss://public.mqtthq.com:8084/mqtt',    //4美国1200，保留消息久，但容易连接失败
             ],//服务器列表
             url = par.url ? par.url : fwqarr[fwq];//服务器
+
+        document.title = decodeURI(par.topic);
 
         MQTT = new Paho.Client(url, clientid);
         MQTT.onConnected = () => console.log('连接成功：' + MQTT.host);
