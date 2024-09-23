@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<style>
+    * {
+        margin: 0;
+        font-weight: bold;
+        font-size: 100px;
+        line-height: 100vh;
+        overflow: hidden;
+        background-clip: text;
+    }
+</style>
+
+<body id="b">%name</body>
+
+<script>
+    run = 0;
+    lrc = `[ar:]
+[ti:]
+[by:]
+[hash:d0d430b622edcce43c67172996d0aca9]
+[al:]
+[sign:]
+[qq:]
+[total:0]
+[offset:0]
+[00:00.00]命中缘-花僮
+[00:00.49]词：公子
+[00:00.98]曲：花僮
+[00:01.47]编曲：王亚东
+[00:01.96]和声：clean
+[00:02.46]混音：CuTTleFiSh
+[00:02.95]母带：CuTTleFiSh
+[00:03.44]制作人：花僮
+[00:03.93]出品人：花僮
+[00:04.42]OP：新创焦桐文化
+[00:16.36]这天气它说变就变
+[00:20.13]期待晴天等来雨点
+[00:24.18]这千变万化的世界
+[00:28.17]美好不一定都如愿
+[00:32.16]过去的不必再留恋
+[00:36.15]珍惜不该等于执念
+[00:40.14]下一站会有谁出现
+[00:44.19]都是我命运中的缘
+[00:48.69]未来的三千六百五十个日夜
+[00:52.65]我决定了风吹到哪页读哪页
+[00:56.64]不管那梦想是成真还是破灭
+[01:00.93]我都会感谢
+[01:04.65]未来的三千六百五十个日夜
+[01:08.64]就应该是风吹到哪页读哪页
+[01:12.63]不管你是来自左边还是右边
+[01:16.89]我等着遇见
+[01:52.23]这天气它说变就变
+[01:56.13]期待晴天等来雨点
+[02:00.18]这千变万化的世界
+[02:04.14]美好不一定都如愿
+[02:08.16]过去的不必再留恋
+[02:12.15]珍惜不该等于执念
+[02:16.14]下一站会有谁出现
+[02:20.16]都是我命运中的缘
+[02:24.66]未来的三千六百五十个日夜
+[02:28.68]我决定了风吹到哪页读哪页
+[02:32.64]不管那梦想是成真还是破灭
+[02:36.90]我都会感谢
+[02:40.65]未来的三千六百五十个日夜
+[02:44.64]就应该是风吹到哪页读哪页
+[02:48.63]不管你是来自左边还是右边
+[02:52.92]我等着遇见
+[02:56.64]未来的三千六百五十个日夜
+[03:00.69]我决定了风吹到哪页读哪页
+[03:04.65]不管那梦想是成真还是破灭
+[03:08.88]我都会感谢
+[03:12.66]未来的三千六百五十个日夜
+[03:16.62]就应该是风吹到哪页读哪页
+[03:20.67]不管你是来自左边还是右边
+[03:24.93]我等着遇见
+`;
+    tiqian = 0;
+    zero = Date.now()
+
+    console.log(new Date(Date.now() - zero))
+
+    lrc = lrc.replaceAll(/.+\]$/mg, '');
+    lrc = lrc.replaceAll(/[\[:\.]/mg, '');
+    lrctime = lrc.match(/^\d+(?=\])/mg);
+    lrctxt = lrc.match(/(?<=\]).+/mg);
+
+    Run();
+    function Run() {
+        run = setInterval(() => {
+            date = new Date(Date.now() - zero + 60000);
+            m = String(date.getMinutes()).padStart(2, '0');
+            s = String(date.getSeconds()).padStart(2, '0');
+            ms = String(Math.floor(date.getMilliseconds() / 10)).padStart(2, '0');
+            now = m + s + ms;
+            if (now >= lrctime[0]) {
+                console.log(now)
+
+                while (now >= lrctime[1]) {
+                    lrctime.shift();
+                    lrctxt.shift();
+                }
+                if (now >= lrctime[1]) {
+                    console.log('超了')
+                }
+
+
+
+                b.innerHTML = lrctxt.shift();
+                lrctime.shift();
+
+                if (!lrctime.length) {
+                    noRun();
+                }
+            }
+        }, 100);
+    }
+
+    function noRun() {
+        clearInterval(run);
+    }
+
+    function C(c) {
+        b.style.color = c;
+        setLocal('color', c)
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="200" height="100"></canvas>
+  <script>
+    // 创建一个新的canvas元素
+
+    // let canvas = document.createElement('canvas');
+    let canvas = document.getElementById("myCanvas");
+    // 获取canvas的2D绘图上下文
+
+    let ctx = canvas.getContext('2d');
+
+
+    // 设置canvas的宽度和高度
+
+    canvas.width = 2560;
+
+    canvas.height = 1600;
+
+
+    // 设置左半部分的颜色（50%透明度的青色）
+
+    ctx.fillStyle = '#EAA763';
+
+    // 填充左半部分，假设左半部分的宽度是canvas宽度的一半
+
+    ctx.fillRect(0, 0, canvas.width / 2, canvas.height);
+
+
+    // 设置右半部分的颜色（50%透明度的红色）
+
+    ctx.fillStyle = '#E8813E';
+
+    // 填充右半部分，从左半部分的边界开始，到canvas的右边界
+
+    ctx.fillRect(canvas.width / 2, 0, canvas.width / 2, canvas.height);
+
+
+
+    // 创建第一张图片
+
+    let img1 = new Image();
+
+    img1.src = '1.jpg';
+
+
+    // 创建第二张图片
+
+    let img2 = new Image();
+
+    img2.src = '2.jpg';
+
+
+    // 创建第三张图片
+
+    let img3 = new Image();
+
+    img3.src = '3.jpg';
+
+
+    let loadedImages = 0; // 记录已加载的图片数量
+
+
+    // 在每张图片加载完成后执行操作
+
+    img1.onload = img2.onload = img3.onload = function () {
+
+      // 将图片绘制到Canvas上，分别指定不同的坐标
+
+      
+      
+      // 每加载完一张图片，计数加1
+      
+      loadedImages++;
+      
+      
+      // 当所有图片都加载完成后才保存canvas内容
+      
+      if (loadedImages === 3) {
+        ctx.drawImage(img1, 55, 75);
+  
+        ctx.drawImage(img2, 930, 450);
+  
+        ctx.drawImage(img3, 1600, 1000);
+
+        save(); // 保存canvas内容
+
+      }
+
+    };
+
+
+    function save() {
+
+      console.log('最后宽' + canvas.width);
+
+      console.log('最后高' + canvas.height);
+
+      data = canvas.toDataURL('image/jpeg', 1);
+
+      data = data.replace('data:image/jpeg;base64,', '');
+
+      // console.log(data)
+
+      setLocal('ddd', data);
+
+      exit();
+
+    }
+
+
+  </script>
+</body>
+
+</html>
