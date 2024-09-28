@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>❤️我的图标</title>
     <style>
         * {
             margin: 0;
@@ -25,21 +25,21 @@
 </head>
 
 <body>
-    <input id="IN" type="text">
+    <input id="IN" type="text"><input id="B" type="button" value="搜索">
     <ul id="List">
     </ul>
 </body>
 
 
 <script>
-    IN.addEventListener('input', (x) => {
-        console.log(x.target.value)
-        if (x.target.value) {
-            brr = arr.filter(item => item.includes(x.target.value));
-            console.log(brr)
+    B.addEventListener('click', () => {
+        // console.log(IN.value)
+        if (IN.value) {
+            brr = arr.filter(item => item.includes(IN.value));
+            // console.log(brr)
             List.innerHTML = '';
             for (i of brr) {
-                List.insertAdjacentHTML("beforeend", '<li><img src="img/' + i + '.png"></li>')
+                List.insertAdjacentHTML("beforeend", '<li><a href="tasker://assistantactions?task=ico&par1=' + window.location.href + 'img/' + i + '.png"><img src="img/' + i + '.png"></a></li>')
             }
         }
     });
