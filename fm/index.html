@@ -65,6 +65,9 @@
 </body>
 <script>
     let arr = [];
+    if (window.location.search) {
+        PLAY(window.location.search.replace('?', ''))
+    }
     fetch('https://webapi.qingting.fm/api/mobile/radio/filter')
         .then(d => d.json())
         .then(d => one(d))
@@ -96,12 +99,10 @@
 
     }
     function three(d) {
-        AAA.src = 'https://lhttp.qingting.fm/live/' + d.content_id + '/64k.mp3';
-        setTimeout(() => {
-            AAA.play()
-        }, 500);
+        PLAY(d.content_id);
+        history.pushState('', '', '?' + d.content_id);
         IMG.src = d.cover;
-        T.innerHTML = d.title
+        T.innerHTML = document.title = d.title
         P.innerHTML = '<b>简介：</b>' + d.description;
         J.innerHTML = '<b>当前节目：</b>' + d.nowplaying.title;
         // console.log(d.region.title)
@@ -125,6 +126,13 @@
 
     function RGB() {
         return [1, 2, 3].map(n => Math.floor(Math.random() * 256));
+    }
+
+    function PLAY(id) {
+        AAA.src = 'https://lhttp.qingting.fm/live/' + id + '/64k.mp3';
+        setTimeout(() => {
+            AAA.play()
+        }, 500);
     }
 </script>
 
