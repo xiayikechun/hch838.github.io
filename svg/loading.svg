@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" width='200' height='200'>
 
-<circle cx="50" cy="50" r="50" stroke-width="10" stroke="#ffb6bb" stroke-dasharray="70" fill="none" stroke-linecap="round">
-<animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"></animateTransform>
+<circle cx="100" cy="100" r="90" stroke-width="20" stroke="#ffb6bb" stroke-dasharray="94" fill="none" stroke-linecap="round">
+<animateTransform attributeName="transform" type="rotate" dur="2s" repeatCount="indefinite" keyTimes="0;1" values="0 100 100;360 100 100"></animateTransform>
 </circle>
 
-<circle cx="100" cy="100" r="78" stroke-width="10" stroke="#ffe691" stroke-dasharray="125.66" fill="none" stroke-linecap="round">
+<circle cx="100" cy="100" r="70" stroke-width="18" stroke="#ffe691" stroke-dasharray="73" fill="none" stroke-linecap="round">
 <animateTransform attributeName="transform" type="rotate" dur="3s" repeatCount="indefinite" keyTimes="0;1" values="0 100 100;-360 100 100"></animateTransform>
 </circle>
 

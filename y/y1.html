@@ -14,15 +14,6 @@
             height: 100%;
         }
 
-        #mdd {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 200;
-            visibility: hidden;
-        }
-
         #shijian {
             position: absolute;
             bottom: 0;
@@ -44,6 +35,15 @@
             transform: rotate(-45deg);
             top: -20px;
             left: -20px;
+        }
+
+        #mdd {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 200;
+            visibility: hidden;
         }
     </style>
 </head>
@@ -114,7 +114,6 @@
                 loc_time = j.loc_time;
                 //显示路径
                 time = Math.floor(Date.now() / 1000 - loc_time);//现在时间减最后上传时间
-                
                 if (time < 600 && desc != i.entities[0].entity_desc) {
                     desc = i.entities[0].entity_desc;
                     console.log(desc);
