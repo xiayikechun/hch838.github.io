@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <style>
+        * {
+            margin: 0;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
+</head>
+
+<body>
+    <div id="List">
+    </div>
+    <script>
+        let msglist = [];//装消息
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function MsgList(a) {
+            msglist.unshift(a);
+            msglist.length > 5 ? msglist.pop() : 0;
+            List.innerHTML = '';
+            List.insertAdjacentHTML("beforeend", '<p>' + msglist.join('</p><p>') + '</p>')
+        }
+    </script>
+</body>
+
+</html>
