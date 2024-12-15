@@ -32,7 +32,11 @@
             'wss://mqtt.eclipseprojects.io/mqtt',//美国1200
             'wss://broker.hivemq.com:8884/mqtt',//德国1800
             'wss://test.mosquitto.org:8081/mqtt',//法国1500
-            'wss://bemfa.com:9504/wss'//巴法云广州30
+            'wss://test.mosquitto.org:8081/mqtt',   //0法国1800，保留消息久
+            'wss://broker.emqx.io:8084/mqtt',       //1美国1300
+            'wss://mqtt.eclipseprojects.io/mqtt',   //2美国1400
+            'wss://broker.hivemq.com:8884/mqtt',    //3德国2000
+            'wss://public.mqtthq.com:8084/mqtt',    //4美国1200，保留消息久，但容易连接失败
         ],//服务器列表
         url = par.url ? par.url : fwqarr[fwq],//服务器
         willMessage = new Paho.Message(CryptoJS.AES.encrypt(JSON.stringify({ a: 'over', id: cid }), key).toString());
