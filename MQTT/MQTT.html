@@ -18,7 +18,7 @@
         cid = Getid(),//稳定id
         doc = document.getElementsByTagName("body")[0],
         par = location.search ? JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}') : {},
-        fwq = par.fwq ? par.fwq : 1,//服务器序号
+        fwq = par.fwq ? par.fwq : 0,//服务器序号
         key = par.key ? par.key : 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaikuaiLaiShuYiShu24678',//AES加密密钥
         name = par.name ? decodeURI(par.name) : Name(),//自己的名字
         topic = par.topic ? par.topic : 'topic27315',//订阅和发送的主题
@@ -27,11 +27,6 @@
         clientid = par.clientid ? par.clientid : Date.now().toString(36),//客户端id
         retained = par.retained ? true : false,//是否保留消息
         fwqarr = [
-            'ws://public.mqtthq.com:8083/mqtt',//美国900
-            'wss://broker.emqx.io:8084/mqtt',//美国1200
-            'wss://mqtt.eclipseprojects.io/mqtt',//美国1200
-            'wss://broker.hivemq.com:8884/mqtt',//德国1800
-            'wss://test.mosquitto.org:8081/mqtt',//法国1500
             'wss://test.mosquitto.org:8081/mqtt',   //0法国1800，保留消息久
             'wss://broker.emqx.io:8084/mqtt',       //1美国1300
             'wss://mqtt.eclipseprojects.io/mqtt',   //2美国1400
