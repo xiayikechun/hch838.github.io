@@ -37,7 +37,7 @@
         MQTT.connect({
             userName: userName,
             password: password,
-            willMessage: willMessage,
+            // willMessage: willMessage,
             keepAliveInterval: 999999,//无活动断开时间
             reconnect: true, //连接丢失时尝试重新连接
             onFailure: () => MsgList('【连接失败】'),//连接请求失败或超时
@@ -47,7 +47,12 @@
                 MQTT.subscribe(zzz, {//订阅主题
                     qos: 1,
                     onFailure: () => MsgList('【订阅失败】：' + zzz),
-                    onSuccess: () => { MsgList('【订阅成功】：' + zzz); Send({ type: 'ping' }); }
+                    onSuccess: () => {
+                        MsgList('【订阅成功】：' + zzz);
+                        setInterval(() => {
+                            Send({ type: 'ping' });
+                        }, 2000);
+                    }
                 });
             }
         });
