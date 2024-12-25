@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MQTT</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
         * {
             margin: 0;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 </head>
 
 <body>
@@ -19,7 +19,7 @@
     </div>
     <script>
         let MQTT,
-            model = '我的型号',
+            model = '主持人',
             msglist = [],//装消息
             time = Date.now(),//测试连接速度
             par = location.search ? JSON.parse('{"' + location.search.substr(1).replace(/\=/g, '":"').replace(/&/g, '","') + '"}') : {},
@@ -53,8 +53,8 @@
                     onSuccess: () => {
                         MsgList('【订阅成功】：' + zzz);
                         setInterval(() => {
-                            Send({ type: 'ping' });
-                        }, 2000);
+                            Send({ type: 'ping', time: Date.now() });
+                        }, 3000);
                     }
                 });
             }
@@ -81,7 +81,7 @@
         function Send(msg) {
             msg = JSON.stringify(msg)
             MsgList('【发送' + aaa + '】：' + msg)
-            msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
+            // msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
             MQTT.send(aaa, msg, 1);
         }
         function MsgList(a) {
