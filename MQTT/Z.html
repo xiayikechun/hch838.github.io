@@ -26,8 +26,8 @@
             userName = par.username,//账号
             password = par.password,//密码
             url = par.url,//服务器
-            aaa = 'A',//
-            zzz = 'Z',//
+            aaa = 'many',//
+            zzz = 'many',//
             clientid = Date.now().toString(36),//客户端id
             key = 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaiKuaiLaiShuYiShu24678',//AES加密密钥
             willMessage = new Paho.Message(CryptoJS.AES.encrypt(JSON.stringify({ type: 'offline', model: model }), key).toString());
@@ -72,7 +72,7 @@
             MsgList('【收到消息】：【' + data.topic + r + '】' + msg);
             msg = JSON.parse(msg)
             if (msg.type === 'ping') {
-                Send({ type: 'pong', model: model });
+                // Send({ type: 'pong', model: model });
             } else {
                 null
             }
@@ -82,7 +82,7 @@
             msg = JSON.stringify(msg)
             MsgList('【发送' + aaa + '】：' + msg)
             // msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
-            MQTT.send(aaa, msg, 1);
+            // MQTT.send(aaa, msg, 1);
         }
         function MsgList(a) {
             msglist.unshift(a);
