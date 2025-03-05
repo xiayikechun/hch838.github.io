@@ -26,7 +26,7 @@
             userName = par.username,//账号
             password = par.password,//密码
             url = par.url,//服务器
-            aaa = 'many',//
+            aaa = 'only',//
             zzz = 'many',//
             clientid = Date.now().toString(36),//客户端id
             key = 'MenQianDaQiaoXiaYouGuoYiQunYaKuaiLaiKuaiLaiShuYiShu24678',//AES加密密钥
@@ -53,8 +53,8 @@
                     onSuccess: () => {
                         MsgList('【订阅成功】：' + zzz);
                         setInterval(() => {
-                            Send({ type: 'ping', time: Date.now() });
-                        }, 3000);
+                            Send({ type: 'online', time: Date.now() });
+                        }, 1234);
                     }
                 });
             }
@@ -82,7 +82,7 @@
             msg = JSON.stringify(msg)
             MsgList('【发送' + aaa + '】：' + msg)
             // msg = CryptoJS.AES.encrypt(msg, key).toString();//加密
-            // MQTT.send(aaa, msg, 1);
+            MQTT.send(aaa, msg, 1);
         }
         function MsgList(a) {
             msglist.unshift(a);
