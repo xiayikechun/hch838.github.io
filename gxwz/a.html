@@ -28,6 +28,7 @@
         geolocation.getCurrentPosition();
 
         geolocation.on('complete', function (m) {
+            window.location.href = "tasker://assistantactions?task=外部调用Tasker任务&par1=啊啊啊"
             alert(m.position);
             // window.close();
         })
