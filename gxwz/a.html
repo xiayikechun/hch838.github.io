@@ -5,36 +5,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测试定位11</title>
+    <title>测试定位12</title>
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <!-- <script src='https://webapi.amap.com/maps?v=2.0&key=c2d8624cfd8ff1058ab6e3ea23d9a779'></script> -->
-
+    <script>
+        AMap.plugin("AMap.Geolocation", function () {
+            geolocation = new AMap.Geolocation({
+                offset: [10, 50],//按钮偏移量
+                convert: true,//转高德坐标
+                useNative: true,//使用安卓定位sdk
+                zoomToAccuracy: true,//自适应视野
+                panToLocation: true,//定位成功后不要作为地图中心点
+                enableHighAccuracy: false //高精度定位
+            })
+            geolocation.getCurrentPosition();
+            geolocation.on('complete', function (m) {
+                window.location.href = 'tasker://assistantactions?task=外部调用Tasker任务&par1=' + m.position.lat + ',' + m.position.lng;
+                // alert(m.position);
+                // window.close();
+            })
+        })
+    </script>
 </head>
-
-<a href="tasker://assistantactions?task=外部调用Tasker任务&par1=啊啊啊">啊啊啊啊啊啊啊啊啊啊</a>
-<script>
-
-    //定位控件
-    AMap.plugin("AMap.Geolocation", function () {
-        geolocation = new AMap.Geolocation({
-            offset: [10, 50],//按钮偏移量
-            convert: true,//转高德坐标
-            useNative: true,//使用安卓定位sdk
-            zoomToAccuracy: true,//自适应视野
-            panToLocation: true,//定位成功后不要作为地图中心点
-            enableHighAccuracy: false //高精度定位
-        })
-
-        geolocation.getCurrentPosition();
-
-        geolocation.on('complete', function (m) {
-            console.log(m);
-            
-            window.location.href = "tasker://assistantactions?task=外部调用Tasker任务&par1=" + m.position.lat;
-            // alert(m.position);
-            // window.close();
-        })
-    })
-</script>
 
 </html>
