@@ -5,25 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测试定位6</title>
+    <title>测试定位7</title>
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <!-- <script src='https://webapi.amap.com/maps?v=2.0&key=c2d8624cfd8ff1058ab6e3ea23d9a779'></script> -->
-    <style>
-        html,
-        body,
-        #container {
-            margin: 0;
-            height: 100%;
-        }
-    </style>
+
 </head>
 
-<body>
-    <div id='container'>加载中...</div>
-</body>
+
 <script>
-    // let map;//主地图
-    // map = new AMap.Map("container");
+
     //定位控件
     AMap.plugin("AMap.Geolocation", function () {
         geolocation = new AMap.Geolocation({
@@ -34,10 +24,9 @@
             panToLocation: true,//定位成功后不要作为地图中心点
             enableHighAccuracy: false //高精度定位
         })
-        //显示定位按钮
-        // map.addControl(geolocation);
+
         geolocation.getCurrentPosition();
-        //定位成功时
+
         geolocation.on('complete', function (m) {
             alert(m.position)
         })
