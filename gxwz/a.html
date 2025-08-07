@@ -50,19 +50,15 @@
 
 <body>
     <div id='container'>加载中...</div>
-    <input type="button" value="开始连接..." id="but_a">
-    <input type="button" value="版本10" id="but_b">
-    <input type="button" value="看全部" id="but_c" onclick=but_c()>
-    <input type="button" value="看自己" id="but_d" onclick=but_d()>
+    <input type="button" value="3" id="but_a">
 
 
 </body>
 <script>
-    let MQTT;
+
     let map;//主地图
     let myico;//用户定位图标
     let mypos;//用户定位坐标
-    let users = {};//用户们
 
     //显示地图
     map = new AMap.Map("container", {
@@ -70,67 +66,46 @@
     });
 
 
-    KongJian()
 
+    //放大缩小控件
 
-    //以下控件
-    function KongJian() {
-        //放大缩小控件
+    //定位控件
+    AMap.plugin("AMap.Geolocation", function () {
+        geolocation = new AMap.Geolocation({
+            offset: [10, 50],//按钮偏移量
+            convert: true,//转高德坐标
+            position: 'RB',//定位按钮的位置
+            useNative: true,//使用安卓定位sdk
+            // needAddress: true,//需要文字地址
+            zoomToAccuracy: true,//自适应视野
+            showMarker: false,//不显示点标记
+            showCircle: false,//不显示精度范围
+            panToLocation: true,//定位成功后不要作为地图中心点
+            enableHighAccuracy: false //高精度定位
+        })
+        //显示定位按钮
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition();
+        //定位成功时
+        geolocation.on('complete', function (m) {
 
-        //定位控件
-        AMap.plugin("AMap.Geolocation", function () {
-            geolocation = new AMap.Geolocation({
-                offset: [10, 50],//按钮偏移量
-                convert: true,//转高德坐标
-                position: 'RB',//定位按钮的位置
-                useNative: true,//使用安卓定位sdk
-                // needAddress: true,//需要文字地址
-                // zoomToAccuracy:true,//自适应视野
-                showMarker: false,//不显示点标记
-                showCircle: false,//不显示精度范围
-                panToLocation: false,//定位成功后不要作为地图中心点
-                enableHighAccuracy: false //高精度定位
+            AMap.plugin('AMap.MoveAnimation', function () {
+                myico = new AMap.Marker({
+                    map: map,
+                    position: m.position,
+                    offset: [-18, -36],
+                    content: '<img src="https://a.amap.com/jsapi_demos/static/resource/img/user.png" style="width:36px">',
+                })
+                // map.setFitView();
             })
-            //显示定位按钮
-            map.addControl(geolocation);
-            geolocation.getCurrentPosition();
-            //定位成功时
-            geolocation.on('complete', function (m) {
-
-                if (myico) {//已有图标
-                    // console.log('已有图标')
-                    // console.log(m)
-                    //移动自己的图标
-                    mypos = [m.position.lng, m.position.lat];
-                    myico.moveTo(mypos, {
-                        duration: 800,
-                        autoRotation: false//不旋转
-                    });
-                    //发送自己的位置
-                    // console.log('发送位置1');
 
 
 
-                } else {//没有图标，只运行1次。
-                    console.log('新增自己图标')
-                    // mdd.value = m.formattedAddress;//显示自己的文字地址
-                    AMap.plugin('AMap.MoveAnimation', function () {
-                        myico = new AMap.Marker({
-                            map: map,
-                            position: m.position,
-                            offset: [-18, -36],
-                            content: '<img src="https://a.amap.com/jsapi_demos/static/resource/img/user.png" style="width:36px">',
-                        })
-                        map.setFitView();
-                    })
-
-                }
-
-            })
-        })//定位控件结束
+        })
+    })//定位控件结束
 
 
-    }
+
 
 
 
