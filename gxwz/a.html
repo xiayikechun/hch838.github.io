@@ -64,64 +64,6 @@
     let mypos;//用户定位坐标
     let users = {};//用户们
 
-
-
-    function onMessageArrived(data) {//收到消息
-        msg = CryptoJS.AES.decrypt(data.payloadString, key).toString(CryptoJS.enc.Utf8);//解密
-        console.log(msg);
-        msg = JSON.parse(msg);
-        console.log(msg);
-        if (msg.id !== cid) {
-            ttt = new Date().toLocaleTimeString();//时分秒
-            mdd.value = ttt + '：' + msg.n + '发来位置';
-            if (users[msg.id] == undefined) {//首次新增图标
-                console.log('新增别人图标');
-                Renshu(1);
-                users[msg.id] = {};
-                AMap.plugin('AMap.MoveAnimation', function () {
-                    users[msg.id].ico = new AMap.Marker({
-                        map: map,
-                        position: msg.a,
-                        label: {
-                            content: msg.n + ' ' + ttt,
-                            direction: 'right',
-                            offset: [0, -24]
-                        }
-                    });
-                    users[msg.id].ico.on('click', Click);
-                    but_c();
-                })
-            } else {//非首次
-                if (msg.a === 'over') {//离线了
-                    Renshu(-1);
-                    users[msg.id].a = 'over';//记录下离线
-                    users[msg.id].ico.setLabel({
-                        content: msg.n + ' ' + ttt + '【离线】'
-                    });
-                } else {
-                    console.log('移动图标');
-                    if (users[msg.id].a === 'over') {//是否离线
-                        Renshu(1);
-                        users[msg.id].a = '';
-                    }
-                    users[msg.id].ico.setLabel({
-                        content: msg.n + ' ' + ttt
-                    });
-                    users[msg.id].ico.moveTo(msg.a, {
-                        duration: 500,
-                        autoRotation: false//不旋转
-                    });
-                }
-            }
-        } else {
-            console.log('是自己消息');
-        }
-
-
-    }
-
-
-
     //显示地图
     map = new AMap.Map("container", {
         zoom: 10
@@ -134,13 +76,7 @@
     //以下控件
     function KongJian() {
         //放大缩小控件
-        AMap.plugin("AMap.ToolBar", function () {
-            map.addControl(new AMap.ToolBar({
-                "position": "LB",
-                "offset": [10, 50]
-            }));
-        });
-        //放大缩小控件结束
+
         //定位控件
         AMap.plugin("AMap.Geolocation", function () {
             geolocation = new AMap.Geolocation({
@@ -172,11 +108,7 @@
                     });
                     //发送自己的位置
                     // console.log('发送位置1');
-                    Send(JSON.stringify({
-                        a: mypos,
-                        n: name,
-                        id: cid
-                    }))
+
 
 
                 } else {//没有图标，只运行1次。
@@ -188,22 +120,10 @@
                             position: m.position,
                             offset: [-18, -36],
                             content: '<img src="https://a.amap.com/jsapi_demos/static/resource/img/user.png" style="width:36px">',
-                            label: {
-                                content: name,
-                                direction: 'right',
-                                offset: [0, -26]
-                            }
                         })
-                        myico.on('click', Click);
+                        map.setFitView();
                     })
 
-                    setTimeout(() => {
-                        map.setFitView();//自适应显示全部
-                    }, 1000);
-
-                    setInterval(() => {
-                        geolocation.getCurrentPosition();//再次定位
-                    }, 6000);
                 }
 
             })
@@ -213,24 +133,6 @@
     }
 
 
-
-
-
-    function but_c() {
-        map.setFitView();//自适应显示全部
-    }
-
-    function but_d() {
-        map.setCenter(mypos);//以自己的位置为中心
-    }
-
-
-    //随机一个名字
-    function Name() {
-        names = ["宝玉", "曹操", "超人", "妲己", "黛玉", "貂蝉", "关羽", "杰瑞", "刘备", "路飞", "洛基", "吕布", "麦兜", "玫瑰", "灭霸", "鸣人", "哪吒", "佩琪", "乔治", "沙僧", "汤姆", "唐僧", "悟空", "星爵", "虚竹", "杨过", "鹰眼", "张飞", "阿童木", "奥特曼", "白素贞", "白云生", "蝙蝠侠", "步惊云", "楚留香", "风清扬", "钢铁侠", "红太狼", "花满楼", "花木兰", "花无缺", "灰太狼", "机器猫", "金刚狼", "蓝精灵", "懒羊羊", "李寻欢", "梁山伯", "令狐冲", "柳余恨", "鲁智深", "绿巨人", "美人鱼", "美羊羊", "米老鼠", "木婉清", "皮卡丘", "皮皮鲁", "秋凤梧", "任我行", "软绵绵", "闪电侠", "圣斗士", "史努比", "水灵光", "孙悟空", "唐老鸭", "韦小宝", "喜羊羊", "萧别离", "小龙女", "小王子", "小燕子", "燕南天", "叶孤城", "蜘蛛侠", "诸葛亮", "猪八戒", "祝英台", "东方不败", "独孤求败", "哆啦A梦", "火箭浣熊", "蜡笔小新", "雷神", "慕容秋水", "奇异博士", "神奇女侠", "司空摘星", "西门吹雪", "萧十一郎", "天山童姥", "诸葛正我", "铁扇公主", "纳兰若水", "冷月清清", "独孤一方", "南宫朔月", "百里芷嫣", "飞天小女警", "美少女战士"];
-        i = Math.floor(Math.random() * names.length);
-        return names[i];
-    }
 
 
 </script>
