@@ -27,6 +27,9 @@
             geolocation = new AMap.Geolocation({
                 convert: true,//转高德坐标
                 useNative: true,//使用安卓定位sdk
+                showMarker: true,//不显示点标记
+                showCircle: true,//不显示精度范围
+                panToLocation: true,//定位成功后不要作为地图中心点
                 enableHighAccuracy: true //高精度定位
             })
             geolocation.getCurrentPosition();
