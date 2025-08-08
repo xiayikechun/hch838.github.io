@@ -14,32 +14,86 @@
             margin: 0;
             height: 100%;
         }
+
+        #but_a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 200;
+        }
+
+        #but_b {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 200;
+        }
+
+        #but_c {
+            position: absolute;
+            top: 5%;
+            right: 0;
+            z-index: 200;
+        }
+
+        #but_d {
+            position: absolute;
+            top: 10%;
+            right: 0;
+            z-index: 200;
+        }
     </style>
 </head>
 
 <body>
     <div id='container'>加载中...</div>
-    <script>
-        map = new AMap.Map("container", {
-            zoom: 10
-        });
-        AMap.plugin("AMap.Geolocation", function () {
-            geolocation = new AMap.Geolocation({
-                convert: true,//转高德坐标
-                useNative: true,//使用安卓定位sdk
-                showMarker: true,//不显示点标记
-                showCircle: true,//不显示精度范围
-                panToLocation: true,//定位成功后不要作为地图中心点
-                enableHighAccuracy: true //高精度定位
-            })
-            geolocation.getCurrentPosition();
-            geolocation.on('complete', function (m) {
-                console.log(m);
-                fetch('http://localhost:1821/gps?' + m.position.lat + ',' + m.position.lng)
-                // .then(() => window.close())
-            })
-        })
-    </script>
+    <input type="button" value="4" id="but_a">
+
+
 </body>
+<script>
+
+    let map;//主地图
+    let myico;//用户定位图标
+    let mypos;//用户定位坐标
+
+    //显示地图
+    map = new AMap.Map("container", {
+        zoom: 10
+    });
+
+
+
+    //放大缩小控件
+
+    //定位控件
+    AMap.plugin("AMap.Geolocation", function () {
+        geolocation = new AMap.Geolocation({
+            offset: [10, 50],//按钮偏移量
+            convert: true,//转高德坐标
+            useNative: true,//使用安卓定位sdk
+            zoomToAccuracy: true,//自适应视野
+            panToLocation: true,//定位成功后不要作为地图中心点
+            enableHighAccuracy: false //高精度定位
+        })
+        //显示定位按钮
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition();
+        //定位成功时
+        geolocation.on('complete', function (m) {
+            alert(m.position)
+
+        })
+    })//定位控件结束
+
+
+
+
+
+
+
+</script>
 
 </html>
