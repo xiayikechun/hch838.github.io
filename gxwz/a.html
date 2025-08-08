@@ -24,7 +24,6 @@
     map = new AMap.Map("container");
     AMap.plugin("AMap.Geolocation", function () {
         geolocation = new AMap.Geolocation({
-            // offset: [10, 50],//按钮偏移量
             convert: true,//转高德坐标
             useNative: true,//使用安卓定位sdk
             zoomToAccuracy: true,//自适应视野
@@ -32,11 +31,11 @@
         })
         //显示定位按钮
         map.addControl(geolocation);
-        geolocation.getCurrentPosition();
-        //定位成功时
-        geolocation.on('complete', function (m) {
-            alert(m.position)
-        })
+        geolocation.getCurrentPosition(function (status, p) {
+            if (status == 'complete') {
+                alert(p.position)
+            }
+        });
     })
 </script>
 
