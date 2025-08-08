@@ -35,8 +35,7 @@
         geolocation.getCurrentPosition(function (status, p) {
             if (status == 'complete') {
                 console.log(p);
-
-                alert('坐标：' + p.position + '\n地址：' + p.formattedAddress + '\n精度：' + p.accuracy)
+                alert('精度：' + p.accuracy + '\n坐标：' + p.position + '\n地址：' + p.formattedAddress)
             }
         });
     })
