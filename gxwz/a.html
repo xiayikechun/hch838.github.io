@@ -34,7 +34,7 @@
         map.addControl(geolocation);
         geolocation.getCurrentPosition(function (status, p) {
             if (status == 'complete') {
-                alert(p.position)
+                alert(p.position + '\n' + p.addressComponent + '\n' + p.formattedAddress)
             }
         });
     })
