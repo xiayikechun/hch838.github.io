@@ -26,6 +26,7 @@
         geolocation = new AMap.Geolocation({
             convert: true,//转高德坐标
             useNative: true,//使用安卓定位sdk
+            needAddress: true,//需要文字地址
             zoomToAccuracy: true,//自适应视野
             panToLocation: true,//定位成功后作为地图中心点
         })
