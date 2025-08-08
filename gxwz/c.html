@@ -21,7 +21,7 @@
         geolocation.getCurrentPosition(function (status, p) {
             if (status == 'complete') {
                 // alert(p.position);
-                fetch('http://localhost:1821/gps?' + m.position.lat + ',' + m.position.lng)
+                fetch('http://localhost:1821/gps?' + p.position.lat + ',' + p.position.lng)
                     .then(() => window.close())
             }
         });
