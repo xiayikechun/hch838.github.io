@@ -21,7 +21,7 @@
         })
         geolocation.getCurrentPosition(function (status, p) {
             if (status == 'complete') {
-                alert('精度：' + p.accuracy + '\n坐标：' + p.position + '\n位置：' + p.addressComponent.neighborhood + '\n地址：' + p.formattedAddress)
+                //alert('精度：' + p.accuracy + '\n坐标：' + p.position + '\n位置：' + p.addressComponent.neighborhood + '\n地址：' + p.formattedAddress)
                 fetch('http://localhost:1821/gps', {
                     method: 'POST',
                     headers: {
