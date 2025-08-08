@@ -7,6 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>浏览器定位</title>
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
+    <style>
+        html,
+        body,
+        #container {
+            margin: 0;
+            height: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,7 +33,7 @@
             geolocation.on('complete', function (m) {
                 console.log(m);
                 fetch('http://localhost:1821/gps?' + m.position.lat + ',' + m.position.lng)
-                    // .then(() => window.close())
+                // .then(() => window.close())
             })
         })
     </script>
