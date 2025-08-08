@@ -12,7 +12,7 @@
             geolocation = new AMap.Geolocation({
                 convert: true,//转高德坐标
                 useNative: true,//使用安卓定位sdk
-                enableHighAccuracy: false //高精度定位
+                enableHighAccuracy: true //高精度定位
             })
             geolocation.getCurrentPosition();
             geolocation.on('complete', function (m) {
