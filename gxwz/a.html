@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>浏览器定位</title>
+    <title>浏览器定位a</title>
     <script src='https://webapi.amap.com/maps?v=2.0&key=47d57deacf67daf4fe68b31c3dcdc253'></script>
     <style>
         html,
@@ -24,19 +24,18 @@
     map = new AMap.Map("container");
     AMap.plugin("AMap.Geolocation", function () {
         geolocation = new AMap.Geolocation({
-            offset: [10, 50],//按钮偏移量
+            // offset: [10, 50],//按钮偏移量
             convert: true,//转高德坐标
             useNative: true,//使用安卓定位sdk
             zoomToAccuracy: true,//自适应视野
-            panToLocation: true,//定位成功后不要作为地图中心点
+            panToLocation: true,//定位成功后作为地图中心点
         })
         //显示定位按钮
         map.addControl(geolocation);
         geolocation.getCurrentPosition();
         //定位成功时
         geolocation.on('complete', function (m) {
-            console.log(m.position)
-
+            alert(m.position)
         })
     })
 </script>
