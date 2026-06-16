@@ -1,0 +1,66 @@
+<style>
+    * {
+        margin: 0;
+        overflow: hidden;
+        scrollbar-width: none;
+    }
+
+    #B {
+        width: 100vw;
+        height: 100vw;
+        background-color: black;
+    }
+
+    #K {
+        position: absolute;
+        border: 1px solid red;
+        left: 50vw;
+        top: 50vw;
+    }
+</style>
+
+<div id="B"></div>
+<img id="K" src="8.svg">
+
+<script>
+    let cx, cy;//开始触摸的位置
+    let sw = screen.width;//屏幕宽
+    let sh = screen.height;//屏幕高
+    console.log('屏幕' + sw + ',' + sh)
+    //flash('屏幕' + sw + ',' + sh)
+
+
+
+    K.style.left = sw / 2;
+    K.style.top = sw / 2;
+    K.addEventListener('touchstart', KA);
+    K.addEventListener('touchmove', KB);
+    K.addEventListener('touchend', KC);
+    B.addEventListener('touchstart', KA);
+    B.addEventListener('touchmove', KB);
+    B.addEventListener('touchend', KC);
+
+    function KA(evt) {
+        t = evt.changedTouches[0];
+        cx = t.clientX;//点击的位置
+        cy = t.clientY;
+        kx = K.getBoundingClientRect().left;//框的位置
+        ky = K.getBoundingClientRect().top;
+        console.log('框被按下' + cx + ',' + cy + '\n位置' + kx + ',' + ky)
+    }
+
+
+    function KB(evt) {
+        t = evt.changedTouches[0];
+        x = t.clientX;
+        y = t.clientY;
+        console.log('移动框')
+        K.style.left = Math.max(0, Math.min(kx + x - cx, sw));
+        K.style.top = Math.max(0, Math.min(ky + y - cy, sw));
+    }
+
+
+    function KC(evt) {
+
+    }
+</script>
